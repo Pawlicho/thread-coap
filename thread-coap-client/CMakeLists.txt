@@ -3,4 +3,9 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 project(thread-coap-client)
 
-target_sources(app PRIVATE src/main.c)
+target_sources(app PRIVATE
+    src/main.c
+    src/coap_client.c)
+
+target_include_directories(app PUBLIC
+    src/)
