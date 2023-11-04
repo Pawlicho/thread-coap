@@ -3,10 +3,27 @@
 /*! Server Enpoint definitions */
 
 /*! Synthesised IPv4 Address, from: 172.18.0.1 */
-#define SERVER_IPV6_ADDRESS       "fdf1:9c6d:dac2:2:0:0:ac12:1"
-
-#define SERVER_PORT               (8383)
+/*! Need to find better sollution than static synthesied prefix becouse the prefix apparently changes */
+#define SERVER_IPV6_ADDRESS         "fdf2:d7b6:d894:2:0:0:ac12:1"
+                                     
+#define SERVER_PORT                 (8383)
 
 /*! Resources definitions */
 
-#define HELLO_WORLD_URI_PATH      "hello_world"
+#define HELLO_WORLD_URI_PATH        "hello_world"
+#define CURR_TEMP_URI_PATH          "curr_temp"
+
+/* Other commons */
+
+#define TEMPERATURE_FORMAT          "%.2f"
+
+/* 1B sign + 3B integer part + 1B dot + 2B fractional part */
+#define ENCODED_TEMPERATUR_MAX_SIZE (8)
+
+/* REQUEST PAYLOAD SIZES */
+#define REQUEST_PAYLOAD_SIZE_HELLO_WORLD    (10)
+#define REQUEST_PAYLOAD_SIZE_CURR_TEMP      (ENCODED_TEMPERATUR_MAX_SIZE)
+
+/* RESPONSE PAYLOAD SIZES */
+#define RESPONSE_PAYLOAD_SIZE_HELLO_WORLD   (10)
+#define RESPONSE_PAYLOAD_SIZE_CURR_TEMP     (ENCODED_TEMPERATUR_MAX_SIZE)

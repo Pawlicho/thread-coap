@@ -1,4 +1,5 @@
 #include "coap_client.h"
+#include "utils.h"
 
 #include <zephyr/kernel.h>
 #include <net/coap_utils.h>
@@ -8,11 +9,22 @@
 #include <openthread/thread.h>
 #include <zephyr/net/socket.h>
 
-LOG_MODULE_REGISTER(coap_client, LOG_LEVEL_DBG);
+LOG_MODULE_DECLARE(COAP_CLIENT);
 
+/* Global var indicating Thread state */
 static bool is_connected;
-static struct k_work hello_world_work;
 
+static volatile float curr_temp = -11.23f;
+
+/* Tasks declaration */
+static struct k_work hello_world_work;
+static struct k_work update_curr_temp_work;
+
+/* CoAP resources URIs*/
+static const char *const hello_world_option[] = { HELLO_WORLD_URI_PATH, NULL };
+static const char *const curr_temp_option[]   = { CURR_TEMP_URI_PATH,   NULL };
+
+/* CoAP server address structure */
 static struct sockaddr_in6 server_addr = {};
 
 static void serv_addr_init()
@@ -24,8 +36,6 @@ static void serv_addr_init()
 
     __ASSERT(err == 1, "zsock_inet_pton() failed %d", err);
 }
-
-static const char *const hello_world_option[] = { HELLO_WORLD_URI_PATH, NULL };
 
 static void on_thread_state_changed(otChangedFlags flags,
                                     struct openthread_context *ot_context,
@@ -63,17 +73,17 @@ static void submit_work_if_connected(struct k_work *work)
 	} 
     else 
     {
-		LOG_WRN("Connection is broken");
+		LOG_WRN("Thread connection is broken");
 	}
 }
 
 /* Callback for hello.GET.reply */
-static int hello_reply(const struct coap_packet *response,
-				       struct coap_reply *reply,
-				       const struct sockaddr *from)
+static int hello_world_reply(const struct coap_packet *response,
+				             struct coap_reply *reply,
+				             const struct sockaddr *from)
 {
-	const uint8_t *payload;
-	uint16_t payload_size = 32; /*! TODO: Hardcoded, change it */
+	const uint8_t* payload;
+	uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_HELLO_WORLD;
 
 	ARG_UNUSED(reply);
 	ARG_UNUSED(from);
@@ -82,7 +92,7 @@ static int hello_reply(const struct coap_packet *response,
 
     if (payload == NULL)
     {
-        LOG_ERR("Did not receive data payload");
+        LOG_ERR("Did not receive data payload from hello_world.GET response");
         return -EINVAL;
     }
 
@@ -91,18 +101,55 @@ static int hello_reply(const struct coap_packet *response,
     return 0;
 }
 
+static int curr_temp_reply(const struct coap_packet *response,
+				           struct coap_reply *reply,
+				           const struct sockaddr *from)
+{
+    const uint8_t* payload;
+    uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_CURR_TEMP;
+
+    ARG_UNUSED(reply);
+	ARG_UNUSED(from);
+
+    payload = coap_packet_get_payload(response, &payload_size);
+
+    if (payload == NULL)
+    {
+        LOG_ERR("Did not receive data payload from curr_temp.PUT response");
+        return -EINVAL;
+    }
+
+    float echo_value = atof(payload);
+
+    printk("\nReceived value from curr_temp.PUT: %.2f\n", echo_value);
+
+    return 0;
+}
+
 static void hello_world_work_cb(struct k_work *item)
 {
     ARG_UNUSED(item);
 
     /* Unused - for now */
-    uint8_t* payload = NULL;
-    uint32_t payload_size = 0;
+    uint8_t payload[REQUEST_PAYLOAD_SIZE_HELLO_WORLD];
+    uint32_t payload_size = sizeof(payload);
 
-    /*! TODO: Add some hello_world message, for the server to see it works */
+    LOG_INF("Sending hello_world.GET request."); /* Include address here in the future */
+    coap_send_request(COAP_METHOD_GET, (const struct sockaddr*)&server_addr, hello_world_option, payload, payload_size, hello_world_reply);
+}
 
-    LOG_INF("Send 'hello' request to the server"); /* Include address here in the future */
-    coap_send_request(COAP_METHOD_GET, (const struct sockaddr*)&server_addr, hello_world_option, payload, payload_size, hello_reply);
+static void update_curr_temp_work_cb(struct k_work *item)
+{
+    ARG_UNUSED(item);
+
+    uint8_t payload[REQUEST_PAYLOAD_SIZE_CURR_TEMP];
+    uint32_t payload_size = sizeof(payload);
+
+    snprintk(payload, payload_size, TEMPERATURE_FORMAT, curr_temp);
+    LOG_INF("Sending cur_temp.PUT request.");
+
+    /* Send curr_temp.PUT request */
+    coap_send_request(COAP_METHOD_PUT, (const struct sockaddr*)&server_addr, curr_temp_option, payload, payload_size, curr_temp_reply);
 
 }
 
@@ -110,13 +157,22 @@ void coap_client_init()
 {
     serv_addr_init();
     coap_init(AF_INET6, NULL);
+
     k_work_init(&hello_world_work, hello_world_work_cb);
+    k_work_init(&update_curr_temp_work, update_curr_temp_work_cb);
 
 	openthread_state_changed_cb_register(openthread_get_default_context(), &ot_state_chaged_cb);
 	openthread_start(openthread_get_default_context());
 }
 
+/* UI functions */
+
 void testConnection()
 {
     submit_work_if_connected(&hello_world_work);
+}
+
+void updateTemperature()
+{
+    submit_work_if_connected(&update_curr_temp_work);
 }

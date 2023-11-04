@@ -4,7 +4,7 @@
 
 #include "coap_client.h"
 
-LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
+LOG_MODULE_REGISTER(COAP_CLIENT, LOG_LEVEL_DBG);
 
 static void on_button_changed(uint32_t button_state, uint32_t has_changed)
 {
@@ -14,6 +14,10 @@ static void on_button_changed(uint32_t button_state, uint32_t has_changed)
     {
         testConnection();
 	}
+    else if (buttons & DK_BTN2_MSK)
+    {
+        updateTemperature();
+    }
 }
 
 int main(void)
