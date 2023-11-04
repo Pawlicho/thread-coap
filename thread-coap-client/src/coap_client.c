@@ -11,6 +11,8 @@
 
 LOG_MODULE_DECLARE(COAP_CLIENT);
 
+mtd_mode_toggle_cb_t mtd_mode_toggle;
+
 /* Global var indicating Thread state */
 static bool is_connected;
 
@@ -21,6 +23,7 @@ static volatile enum OCCUPATION_STATE occupation_state = OCCUPATION_STATE_ROOM_O
 static struct k_work hello_world_work;
 static struct k_work update_curr_temp_work;
 static struct k_work update_occupation_state_work;
+static struct k_work toggle_MTD_SED_work;
 
 /* CoAP resources URIs*/
 static const char *const hello_world_option[]        = { HELLO_WORLD_URI_PATH,        NULL };
@@ -189,6 +192,30 @@ static void update_curr_temp_work_cb(struct k_work *item)
                       curr_temp_reply);
 }
 
+static void toggle_minimal_sleepy_end_device_work_cb(struct k_work *item)
+{
+	otError error;
+	otLinkModeConfig mode;
+	struct openthread_context *context = openthread_get_default_context();
+
+	__ASSERT_NO_MSG(context != NULL);
+
+	openthread_api_mutex_lock(context);
+	mode = otThreadGetLinkMode(context->instance);
+	mode.mRxOnWhenIdle = !mode.mRxOnWhenIdle;
+	error = otThreadSetLinkMode(context->instance, mode);
+	openthread_api_mutex_unlock(context);
+
+	if (error != OT_ERROR_NONE) 
+    {
+		LOG_ERR("Failed to set MLE link mode configuration");
+	} 
+    else 
+    {
+		mtd_mode_toggle(mode.mRxOnWhenIdle);
+	}
+}
+
 static void update_occupation_state_work_cb(struct k_work *item)
 {
     ARG_UNUSED(item);
@@ -208,14 +235,18 @@ static void update_occupation_state_work_cb(struct k_work *item)
                       is_room_occupied_reply);
 }
 
-void coap_client_init()
+void coap_client_init(mtd_mode_toggle_cb_t on_toggle)
 {
+    mtd_mode_toggle = on_toggle;
+
     serv_addr_init();
     coap_init(AF_INET6, NULL);
 
     k_work_init(&hello_world_work, hello_world_work_cb);
     k_work_init(&update_curr_temp_work, update_curr_temp_work_cb);
     k_work_init(&update_occupation_state_work, update_occupation_state_work_cb);
+    k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
+    
 
 	openthread_state_changed_cb_register(openthread_get_default_context(), &ot_state_chaged_cb);
 	openthread_start(openthread_get_default_context());
@@ -223,17 +254,22 @@ void coap_client_init()
 
 /* UI functions */
 
-void testConnection()
+void testConnection(void)
 {
     submit_work_if_connected(&hello_world_work);
 }
 
-void updateCurrentTemperature()
+void updateCurrentTemperature(void)
 {
     submit_work_if_connected(&update_curr_temp_work);
 }
 
-void updateOccupationState()
+void updateOccupationState(void)
 {
     submit_work_if_connected(&update_occupation_state_work);
+}
+
+void toggle_minimal_sleepy_end_device(void)
+{
+	k_work_submit(&toggle_MTD_SED_work);
 }

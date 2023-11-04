@@ -7,13 +7,17 @@
 #include <zephyr/logging/log.h>
 #include "coap_common.h"
 
-void coap_client_init();
+typedef void (*mtd_mode_toggle_cb_t)(uint32_t val);
 
-void testConnection();
+void coap_client_init(mtd_mode_toggle_cb_t on_toggle);
 
-void updateCurrentTemperature();
+void testConnection(void);
 
-void updateOccupationState();
+void updateCurrentTemperature(void);
+
+void updateOccupationState(void);
+
+void toggle_minimal_sleepy_end_device(void);
 
 enum OCCUPATION_STATE
 {
