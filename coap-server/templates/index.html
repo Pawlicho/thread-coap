@@ -1,17 +1,33 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Parameter Setting</title>
+    <title>Thread Home Automation System</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
 </head>
 <body>
-    <h1>Set Parameters</h1>
-    <form method="POST" action="/save_parameter">
-        <label for="name">Name: </label>
-        <input type="text" name="name" required><br><br>
-        <label for="value">Value: </label>
-        <input type="text" name="value" required><br><br>
-        <input type="submit" value="Save">
+    <h2>Set Parameters</h2>
+    <form method="post" action="/submit">
+        <label for="temperature1">Set Temperature 1:</label>
+        <input type="number" step="0.01" name="temperature1" required>
+
+        <label for="temperature2">Set Temperature 2:</label>
+        <input type="number" step="0.01" name="temperature2" required>
+
+        <input type="submit" value="Submit">
     </form>
+
+    <h3>Last Update:</h3>
+    {% if last_update %}
+    <p>Time: {{ last_update[0] }}</p>
+    <p>Temperature 1: {{ last_update[1] }}</p>
+    <p>Temperature 2: {{ last_update[2] }}</p>
+    {% else %}
+    <p>No data available</p>
+    {% endif %}
+
+    <div class="button-container">
+        <a href="/logs/client1" class="button">Client 1 Logs</a>
+        <a href="/logs/client2" class="button">Client 2 Logs</a>
+    </div>
 </body>
 </html>

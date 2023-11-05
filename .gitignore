@@ -11,3 +11,5 @@ thread-coap-client/build*/
 
 #PyEnv
 env/
+
+*/__pycache__/
