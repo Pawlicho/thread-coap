@@ -8,3 +8,6 @@ thread-coap-client/build*/
 
 #VSCode
 .vscode
+
+#PyEnv
+env/

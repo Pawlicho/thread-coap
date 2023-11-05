@@ -6,7 +6,7 @@ import aiocoap.resource as resource
 
 class HelloWorldResource(resource.Resource):
     async def render_get(self, request):
-        print("Received GET request")
+        print("\nReceived hello_world.PUT.Req\n")
         payload = "Hello there!!!\n".encode('ascii')
         return aiocoap.Message(payload=payload)
 
@@ -21,16 +21,23 @@ class CurrTempResource(resource.Resource):
 
     def decodeContent(self, payload):
         decoded = payload.decode('ascii')
+        decoded = decoded.strip('\x00')
         self.temp = float(decoded)
 
     async def render_get(self, request):
+        print("\nReceived curr_temp.GET.Req\n")
         self.encodeContent()
+        print("\Responding with curr_temp.GET.Rsp\n")
         return aiocoap.Message(payload=self.encoded)
     
     async def render_put(self, request):
-        print('PUT payload: %s' % request.payload)
+        print("\nReceived curr_temp.PUT.Req")
         self.decodeContent(request.payload)
+
+        print("New curr_temp value on the server side: " + str(self.temp))
+
         self.encodeContent()
+        print("Responding with curr_temp.PUT.Rsp\n")
         return aiocoap.Message(code=aiocoap.CHANGED, payload=self.encoded)
     
 class SetTempResource(resource.Resource):
@@ -44,6 +51,7 @@ class SetTempResource(resource.Resource):
 
     def decodeContent(self, payload):
         decoded = payload.decode('ascii')
+        decoded = decoded.strip('\x00')
         self.temp = float(decoded)
 
     async def render_get(self, request):
@@ -66,6 +74,8 @@ class IsRoomOccupiedResource(resource.Resource):
 
     def decodeContent(self, payload):
         decoded = payload.decode('ascii')
+        decoded = decoded.strip('\x00')
+        print("\nDecoded payload: " + decoded)
         self.is_occupied = int(decoded)
 
     async def render_get(self, request):
@@ -89,6 +99,7 @@ class AdjustTempResource(resource.Resource):
 
     def decodeContent(self, payload):
         decoded = payload.decode('ascii')
+        decoded = decoded.strip('\x00')
         self.adjustment = float(decoded)
 
     async def render_get(self, request):
