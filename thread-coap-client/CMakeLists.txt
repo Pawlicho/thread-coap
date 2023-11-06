@@ -5,7 +5,11 @@ project(thread-coap-client)
 
 target_sources(app PRIVATE
     src/main.c
-    src/client_utils.c)
+    src/client_utils.c
+    src/coap_client.c
+    src/mtd.c
+    src/thread.c
+    src/buttons.c)
 
 target_include_directories(app PUBLIC
     src/)
