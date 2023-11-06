@@ -5,7 +5,7 @@
 #include <zephyr/device.h>
 #include <zephyr/pm/device.h>
 
-#include "coap_client.h"
+#include "client_utils.h"
 
 LOG_MODULE_REGISTER(COAP_CLIENT, LOG_LEVEL_DBG);
 
@@ -34,15 +34,16 @@ static void on_button_changed(uint32_t button_state, uint32_t has_changed)
 
 	if (buttons & DK_BTN1_MSK) 
     {
-        testConnection();
+        /* This button will be responsible for increasing curr_temp */     
 	}
     else if (buttons & DK_BTN2_MSK)
     {
+        /* This button will be responsible for increasing curr_temp */
         updateCurrentTemperature();
     }
     else if (buttons & DK_BTN3_MSK)
     {
-        updateOccupationState();
+        testConnection();
     }
     else if (buttons * DK_BTN4_MSK)
     {

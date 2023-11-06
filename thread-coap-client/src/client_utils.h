@@ -19,8 +19,3 @@ void updateOccupationState(void);
 
 void toggle_minimal_sleepy_end_device(void);
 
-enum OCCUPATION_STATE
-{
-    OCCUPATION_STATE_ROOM_NOT_OCCUPIED = 0,
-    OCCUPATION_STATE_ROOM_OCCUPIED = 1,
-};

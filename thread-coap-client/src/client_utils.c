@@ -1,5 +1,4 @@
-#include "coap_client.h"
-#include "utils.h"
+#include "client_utils.h"
 
 #include <zephyr/kernel.h>
 #include <net/coap_utils.h>
@@ -11,24 +10,23 @@
 
 LOG_MODULE_DECLARE(COAP_CLIENT);
 
+/* Callback for switching MED mode*/
 mtd_mode_toggle_cb_t mtd_mode_toggle;
 
 /* Global var indicating Thread state */
 static bool is_connected;
 
 static volatile float curr_temp = -11.23f;
-static volatile enum OCCUPATION_STATE occupation_state = OCCUPATION_STATE_ROOM_OCCUPIED;
+static volatile float correction;
 
 /* Tasks declaration */
 static struct k_work hello_world_work;
 static struct k_work update_curr_temp_work;
-static struct k_work update_occupation_state_work;
 static struct k_work toggle_MTD_SED_work;
 
 /* CoAP resources URIs*/
 static const char *const hello_world_option[]        = { HELLO_WORLD_URI_PATH,        NULL };
 static const char *const curr_temp_option[]          = { CURR_TEMP_URI_PATH,          NULL };
-static const char *const is_room_occupied_option[]   = { IS_ROOM_OCCUPIED_URI_PATH,   NULL };
 
 /* CoAP server address structure */
 static struct sockaddr_in6 server_addr = {};
@@ -115,44 +113,52 @@ static int curr_temp_reply(const struct coap_packet *response,
     uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_CURR_TEMP;
 
     ARG_UNUSED(reply);
-	ARG_UNUSED(from);
+
+    /* Some casting */
+    struct sockaddr receive = *(from);
+    struct sockaddr_in6* rcv_sockaddr = net_sin6(&receive);
+
+    char addr_str[NET_IPV6_ADDR_LEN];
+    uint16_t port = ntohs(rcv_sockaddr->sin6_port);
+
+    uint8_t response_code = coap_header_get_code(response);
+
+
+    if (inet_ntop(AF_INET6, &rcv_sockaddr->sin6_addr, addr_str, sizeof(addr_str)) == NULL) 
+    {
+        LOG_WRN("Unable to resolve IP address from sockaddr");
+    } 
+
+    /*! TODO: Remove magic numbers */
+    LOG_WRN("Received curr_temp.PUT.Rsp. SRC: %s:%u, CODE: (%d.%02d)",
+              addr_str,
+              (unsigned int)port,
+              (int)(response_code >> 5),
+              (int)(response_code & 0x1F));
 
     payload = coap_packet_get_payload(response, &payload_size);
 
     if (payload == NULL)
     {
-        LOG_ERR("Did not receive data payload from curr_temp.PUT.Rsp.");
+        LOG_ERR("Did not receive data payload from curr_temp.PUT.Rsp. SRC: %s:%u, CODE: (%d.%02d)",
+                addr_str,
+                (unsigned int)port,
+                (int)(response_code >> 5),
+                (int)(response_code & 0x1F));
+                
         return -EINVAL;
     }
 
     float echo_value = atof(payload);
 
+    LOG_WRN("Received data payload from curr_temp.PUT.Rsp. DATA: %s, SRC: %s:%u, CODE: (%d.%02d)",
+            payload,
+            addr_str,
+            (unsigned int)port,
+            (int)(response_code >> 5),
+            (int)(response_code & 0x1F));
+
     printk("\nReceived value from curr_temp.PUT.Rsp: %.2f\n", echo_value);
-
-    return 0;
-}
-
-static int is_room_occupied_reply(const struct coap_packet *response,
-				                  struct coap_reply *reply,
-				                  const struct sockaddr *from)
-{
-    const uint8_t* payload;
-    uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_IS_ROOM_OCCUPIED;
-
-    ARG_UNUSED(reply);
-	ARG_UNUSED(from);
-
-    payload = coap_packet_get_payload(response, &payload_size);
-
-    if (payload == NULL)
-    {
-        LOG_ERR("Did not receive data payload from is_room_occupied.PUT.Rsp.");
-        return -EINVAL;
-    }
-
-    unsigned int echo_value = (unsigned int)atoi(payload);
-
-    printk("\nReceived value from is_room_occupied.PUT: %u\n", echo_value);
 
     return 0;
 }
@@ -181,7 +187,20 @@ static void update_curr_temp_work_cb(struct k_work *item)
     uint32_t payload_size = sizeof(payload);
 
     snprintk(payload, payload_size, TEMPERATURE_FORMAT, curr_temp);
-    LOG_INF("Sending curr_temp.PUT.Req.");
+
+    char addr_str[NET_IPV6_ADDR_LEN];
+    uint16_t port = ntohs(server_addr.sin6_port);
+
+    if (inet_ntop(AF_INET6, &server_addr.sin6_addr, addr_str, sizeof(addr_str)) != NULL) 
+    {
+        LOG_WRN("Sending curr_temp.PUT.Req. DST: %s:%u",
+                addr_str,
+                (unsigned int)port);
+    } 
+    else 
+    {
+        LOG_WRN("Unable to resolve IP address from sockaddr.");
+    }
 
     /* Send curr_temp.PUT request */
     coap_send_request(COAP_METHOD_PUT,
@@ -216,25 +235,6 @@ static void toggle_minimal_sleepy_end_device_work_cb(struct k_work *item)
 	}
 }
 
-static void update_occupation_state_work_cb(struct k_work *item)
-{
-    ARG_UNUSED(item);
-
-    uint8_t payload[REQUEST_PAYLOAD_SIZE_IS_ROOM_OCCUPIED];
-    uint32_t payload_size = sizeof(payload);
-
-    snprintk(payload, payload_size, "%d", occupation_state);
-    LOG_INF("Sending is_room_occupied.PUT.Req.");
-
-    /* Send curr_temp.PUT request */
-    coap_send_request(COAP_METHOD_PUT,
-                      (const struct sockaddr*)&server_addr,
-                      is_room_occupied_option,
-                      payload,
-                      payload_size,
-                      is_room_occupied_reply);
-}
-
 void coap_client_init(mtd_mode_toggle_cb_t on_toggle)
 {
     mtd_mode_toggle = on_toggle;
@@ -244,10 +244,8 @@ void coap_client_init(mtd_mode_toggle_cb_t on_toggle)
 
     k_work_init(&hello_world_work, hello_world_work_cb);
     k_work_init(&update_curr_temp_work, update_curr_temp_work_cb);
-    k_work_init(&update_occupation_state_work, update_occupation_state_work_cb);
     k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
     
-
 	openthread_state_changed_cb_register(openthread_get_default_context(), &ot_state_chaged_cb);
 	openthread_start(openthread_get_default_context());
 }
@@ -262,11 +260,6 @@ void testConnection(void)
 void updateCurrentTemperature(void)
 {
     submit_work_if_connected(&update_curr_temp_work);
-}
-
-void updateOccupationState(void)
-{
-    submit_work_if_connected(&update_occupation_state_work);
 }
 
 void toggle_minimal_sleepy_end_device(void)
