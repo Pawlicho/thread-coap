@@ -1,8 +1,8 @@
 import sqlite3
 import time
 
-def DropAllTables(db_name):
-    conn = sqlite3.connect(db_name)
+def DropAllTables(db_path):
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     
@@ -18,8 +18,8 @@ def DropAllTables(db_name):
     conn.commit()
     conn.close()
 
-def CreateTables(db_name):
-    conn = sqlite3.connect(db_name)
+def CreateTables(db_path):
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     CreateWemMenagerLogsTable(conn)
