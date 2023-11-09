@@ -1,10 +1,10 @@
 #include "coap_client.h"
+#include "heater.h"
 
 LOG_MODULE_DECLARE(COAP_CLIENT);
 
 /* CoAP resources URIs*/
-static const char *const hello_world_option[]        = { HELLO_WORLD_URI_PATH,        NULL };
-static const char *const curr_temp_option[]          = { CURR_TEMP_URI_PATH,          NULL };
+static const char *const heater_option[]          = { HEATER_URI_PATH,          NULL };
 
 /* CoAP server address structure */
 static struct sockaddr_in6 server_addr = {};
@@ -19,60 +19,12 @@ void serv_addr_init()
     __ASSERT(err == 1, "zsock_inet_pton() failed %d", err);
 }
 
-/* Callback for hello.GET.reply */
-int hello_world_reply(const struct coap_packet *response,
-				             struct coap_reply *reply,
-				             const struct sockaddr *from)
-{
-	const uint8_t* payload;
-	uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_HELLO_WORLD;
-
-	ARG_UNUSED(reply);
-
-	payload = coap_packet_get_payload(response, &payload_size);
-
-    struct sockaddr receive = *(from);
-    struct sockaddr_in6* rcv_sockaddr = net_sin6(&receive);
-
-    char addr_str[NET_IPV6_ADDR_LEN];
-    uint16_t port = ntohs(rcv_sockaddr->sin6_port);
-
-    uint8_t response_code = coap_header_get_code(response);
-
-    if (inet_ntop(AF_INET6, &rcv_sockaddr->sin6_addr, addr_str, sizeof(addr_str)) == NULL) 
-    {
-        LOG_WRN("Unable to resolve IP address from sockaddr");
-    } 
-
-    if (payload == NULL)
-    {
-        LOG_ERR("Did not receive data payload from hello_world.GET.Rsp. SRC: %s:%u, CODE: (%d.%02d)",
-                addr_str,
-                (unsigned int)port,
-                (int)(response_code >> 5),
-                (int)(response_code & 0x1F));
-
-        return -EINVAL;
-    }
-    else
-    {
-        LOG_INF("Received data payload from hello_world.GET.Rsp. DATA: %s, SRC: %s:%u, CODE: (%d.%02d)",
-                payload,
-                addr_str,
-                (unsigned int)port,
-                (int)(response_code >> 5),
-                (int)(response_code & 0x1F));
-        
-        return 0;
-    }   
-}
-
-int curr_temp_reply(const struct coap_packet *response,
+int heater_reply(const struct coap_packet *response,
 				           struct coap_reply *reply,
 				           const struct sockaddr *from)
 {
     const uint8_t* payload;
-    uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_CURR_TEMP;
+    uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_HEATER;
 
     ARG_UNUSED(reply);
 
@@ -109,7 +61,7 @@ int curr_temp_reply(const struct coap_packet *response,
         return -EINVAL;
     }
 
-    [[maybe_unused]] float respTemp = atof(payload);
+    heater.correction = atof(payload);
 
     LOG_INF("Received data payload from curr_temp.PUT.Rsp. DATA: %s, SRC: %s:%u, CODE: (%d.%02d)",
             payload,
@@ -121,41 +73,14 @@ int curr_temp_reply(const struct coap_packet *response,
     return 0;
 }
 
-void hello_world_work_cb(struct k_work *item)
+void update_heater_work_cb(struct k_work *item)
 {
     ARG_UNUSED(item);
 
-    uint8_t payload[REQUEST_PAYLOAD_SIZE_HELLO_WORLD];
+    uint8_t payload[REQUEST_PAYLOAD_SIZE_HEATER];
     uint32_t payload_size = sizeof(payload);
 
-    char addr_str[NET_IPV6_ADDR_LEN];
-    uint16_t port = ntohs(server_addr.sin6_port);
-
-    if (inet_ntop(AF_INET6, &server_addr.sin6_addr, addr_str, sizeof(addr_str)) != NULL) 
-    {
-        LOG_INF("Sending hello_world.GET.Req. DST: %s:%u",
-                addr_str,
-                (unsigned int)port);
-    } 
-    else 
-    {
-        LOG_WRN("Unable to resolve IP address from sockaddr.");
-    }
-
-    coap_send_request(COAP_METHOD_GET,
-                      (const struct sockaddr*)&server_addr,
-                      hello_world_option, payload,
-                      payload_size, hello_world_reply);
-}
-
-void update_curr_temp_work_cb(struct k_work *item)
-{
-    ARG_UNUSED(item);
-
-    uint8_t payload[REQUEST_PAYLOAD_SIZE_CURR_TEMP];
-    uint32_t payload_size = sizeof(payload);
-
-    snprintk(payload, payload_size, TEMPERATURE_FORMAT, curr_temp);
+    snprintk(payload, payload_size, TEMPERATURE_FORMAT, heater.current_temp);
 
     char addr_str[NET_IPV6_ADDR_LEN];
     uint16_t port = ntohs(server_addr.sin6_port);
@@ -173,8 +98,8 @@ void update_curr_temp_work_cb(struct k_work *item)
 
     coap_send_request(COAP_METHOD_PUT,
                       (const struct sockaddr*)&server_addr,
-                      curr_temp_option,
+                      heater_option,
                       payload,
                       payload_size,
-                      curr_temp_reply);
+                      heater_reply);
 }

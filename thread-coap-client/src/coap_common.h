@@ -4,14 +4,13 @@
 
 /*! Synthesised IPv4 Address, from: 172.18.0.1 */
 /*! Need to find better sollution than static synthesied prefix becouse the prefix apparently changes */
-#define SERVER_IPV6_ADDRESS         "fdb7:cefc:5cb3:2:0:0:ac12:1"
+#define SERVER_IPV6_ADDRESS         "fd5e:f801:b46b:2:0:0:ac12:1"
                                      
 #define SERVER_PORT                 (8383)
 
 /*! Resources definitions */
 
-#define HELLO_WORLD_URI_PATH        "hello_world"
-#define CURR_TEMP_URI_PATH          "curr_temp"
+#define HEATER_URI_PATH          "heater"
 
 /* Other commons */
 
@@ -21,9 +20,7 @@
 #define ENCODED_TEMPERATUR_MAX_SIZE (8)
 
 /* REQUEST PAYLOAD SIZES */
-#define REQUEST_PAYLOAD_SIZE_HELLO_WORLD        (10)
-#define REQUEST_PAYLOAD_SIZE_CURR_TEMP          (ENCODED_TEMPERATUR_MAX_SIZE)
+#define REQUEST_PAYLOAD_SIZE_HEATER          (ENCODED_TEMPERATUR_MAX_SIZE)
 
 /* RESPONSE PAYLOAD SIZES */
-#define RESPONSE_PAYLOAD_SIZE_HELLO_WORLD       (10)
-#define RESPONSE_PAYLOAD_SIZE_CURR_TEMP         (ENCODED_TEMPERATUR_MAX_SIZE)
+#define RESPONSE_PAYLOAD_SIZE_HEATER         (ENCODED_TEMPERATUR_MAX_SIZE)
