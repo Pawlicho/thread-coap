@@ -10,6 +10,7 @@
     {% if logs_data %}
     <table>
         <tr>
+            <th>ID</th>
             <th>Time</th>
             <th>Measured Temperature</th>
             <th>Sent Temperature Correction</th>
@@ -21,6 +22,7 @@
             <td>{{ log[1] }}</td>
             <td>{{ log[2] }}</td>
             <td>{{ log[3] }}</td>
+            <td>{{ log[4] }}</td>
         </tr>
         {% endfor %}
     </table>

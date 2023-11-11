@@ -8,14 +8,31 @@ class ServerSetParameters:
     def __init__(self):
         self.set_temperature = 0
 
-    def update_temperature(self, new):
-        self.set_temperature = new
+    def Update(self, new):
+        self.set_temperature = float(new)
+
+    def GetTemperature(self):
+        return self.set_temperature
+
+class ServerCurrentParameters:
+    def __init__(self):
+        self.cur_temperature = 0
+
+    def Update(self, new):
+        self.cur_temperature = new
+
+    def GetTemperature(self):
+        return self.cur_temperature
+
+def calc_correction_temp(set_val, curr_val):
+    correction = set_val - curr_val
+    return round(correction, 2)
 
 async def pull_data(state):
     async with aiosqlite.connect(db_path) as db:
-        async with db.execute("SELECT set_temperature_1 FROM WEB_MANAGER_LOGS ORDER BY time DESC LIMIT 1") as cursor:
+        async with db.execute("SELECT set_temperature_1 FROM WEB_MANAGER_LOGS ORDER BY id DESC LIMIT 1") as cursor:
             new_val = await cursor.fetchone()
-            state.update_temperature(new_val[0])
+            state.Update(new_val[0])
 
 async def periodic_task(state):
     while True:

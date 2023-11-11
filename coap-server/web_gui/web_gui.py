@@ -16,7 +16,7 @@ def insert_data(temperature1, temperature2):
 def get_web_manager_last_update():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM WEB_MANAGER_LOGS ORDER BY time DESC LIMIT 1")
+    cursor.execute("SELECT * FROM WEB_MANAGER_LOGS ORDER BY id DESC LIMIT 1")
     last_update = cursor.fetchone()
     conn.close()
     return last_update
@@ -24,7 +24,7 @@ def get_web_manager_last_update():
 def get_client_1_logs():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM CLIENT_1_LOGS")
+    cursor.execute("SELECT * FROM CLIENT_1_LOGS ORDER BY id DESC")
     logs = cursor.fetchall()
     conn.close()
     return logs
@@ -32,7 +32,7 @@ def get_client_1_logs():
 def get_client_2_logs():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM CLIENT_2_LOGS")
+    cursor.execute("SELECT * FROM CLIENT_2_LOGS ORDER BY id DESC")
     logs = cursor.fetchall()
     conn.close()
     return logs
