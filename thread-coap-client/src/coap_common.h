@@ -4,7 +4,7 @@
 
 /*! Synthesised IPv4 Address, from: 172.18.0.1 */
 /*! Need to find better sollution than static synthesied prefix becouse the prefix apparently changes */
-#define SERVER_IPV6_ADDRESS         "fd5e:f801:b46b:2:0:0:ac12:1"
+#define SERVER_IPV6_ADDRESS         "fd24:3e2a:982e:2:0:0:ac12:1"
                                      
 #define SERVER_PORT                 (8383)
 

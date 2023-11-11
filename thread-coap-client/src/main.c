@@ -3,6 +3,8 @@
 #include <zephyr/logging/log.h>
 
 #include "buttons.h"
+#include "sensor.h"
+#include "regulator.h"
 
 LOG_MODULE_REGISTER(COAP_CLIENT, LOG_LEVEL_DBG);
 
@@ -21,6 +23,9 @@ int main(void)
         LOG_ERR("Cannot initialize client (error: %d)", ret);
         return ret;
     }
+
+    sensor_init();
+    // regulator_init();
 
     return 0;
 }

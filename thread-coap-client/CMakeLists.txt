@@ -9,7 +9,9 @@ target_sources(app PRIVATE
     src/coap_client.c
     src/mtd.c
     src/thread.c
-    src/buttons.c)
+    src/buttons.c
+    src/regulator.c
+    src/sensor.c)
 
 target_include_directories(app PUBLIC
     src/)
