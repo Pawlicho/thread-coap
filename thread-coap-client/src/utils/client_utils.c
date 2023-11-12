@@ -5,6 +5,7 @@
 #include "thread.h"
 #include "heater.h"
 
+#include <zephyr/net/coap.h>
 #include <zephyr/kernel.h>
 
 #define BUTTON_TEMPERATURE_UPDATE_STEP  (5.0f)

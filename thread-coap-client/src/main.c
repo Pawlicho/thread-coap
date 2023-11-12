@@ -25,7 +25,7 @@ int main(void)
     }
 
     sensor_init();
-    // regulator_init();
+    regulator_init();
 
     return 0;
 }

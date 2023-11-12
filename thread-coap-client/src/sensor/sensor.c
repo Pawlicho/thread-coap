@@ -5,9 +5,6 @@
 
 static struct k_timer measure_timer;
 
-/* Simulated */
-static int debug;
-
 static void measure_timer_cb(struct k_timer *dummy)
 {
     updateHeater();
@@ -21,5 +18,5 @@ void sensor_init()
     /* Start timers */
 
     /* Every one second send measurement to the Server */
-    k_timer_start(&measure_timer, K_MSEC(6 * 333), K_MSEC(6 * 333));
+    k_timer_start(&measure_timer, K_MSEC(2000), K_MSEC(2000));
 }
