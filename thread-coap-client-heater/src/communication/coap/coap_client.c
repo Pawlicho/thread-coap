@@ -42,7 +42,7 @@ int heater_reply(const struct coap_packet *response,
     } 
 
     /*! TODO: Remove magic numbers */
-    LOG_INF("Received curr_temp.PUT.Rsp. SRC: %s:%u, CODE: (%d.%02d)",
+    LOG_INF("Received heater.PUT.Rsp. SRC: %s:%u, CODE: (%d.%02d)",
               addr_str,
               (unsigned int)port,
               (int)(response_code >> 5),
@@ -52,7 +52,7 @@ int heater_reply(const struct coap_packet *response,
 
     if (payload == NULL)
     {
-        LOG_ERR("Did not receive data payload from curr_temp.PUT.Rsp. SRC: %s:%u, CODE: (%d.%02d)",
+        LOG_ERR("Did not receive data payload from heater.PUT.Rsp. SRC: %s:%u, CODE: (%d.%02d)",
                 addr_str,
                 (unsigned int)port,
                 (int)(response_code >> 5),
@@ -63,7 +63,7 @@ int heater_reply(const struct coap_packet *response,
 
     heater.correction = atof(payload);
 
-    LOG_INF("Received data payload from curr_temp.PUT.Rsp. DATA: %s, SRC: %s:%u, CODE: (%d.%02d)",
+    LOG_INF("Received data payload from heater.PUT.Rsp. DATA: %s, SRC: %s:%u, CODE: (%d.%02d)",
             payload,
             addr_str,
             (unsigned int)port,
@@ -87,7 +87,7 @@ void update_heater_work_cb(struct k_work *item)
 
     if (inet_ntop(AF_INET6, &server_addr.sin6_addr, addr_str, sizeof(addr_str)) != NULL) 
     {
-        LOG_INF("Sending curr_temp.PUT.Req. DST: %s:%u",
+        LOG_INF("Sending heater.PUT.Req. DST: %s:%u",
                 addr_str,
                 (unsigned int)port);
     } 

@@ -4,7 +4,8 @@
 *~
 
 # build
-thread-coap-client/build*/
+thread-coap-client-dimmer/build*/
+thread-coap-client-heater/build*/
 
 #VSCode
 .vscode
