@@ -16,7 +16,11 @@ thread-coap-client-heater/build*/
 #PyEnv
 env/
 
+#Python
 */__pycache__/
+
+# Databases
+*.db
 
 #SSL
 *.pem
