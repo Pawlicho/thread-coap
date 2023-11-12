@@ -9,32 +9,53 @@ db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_datab
 class ServerSetParameters:
     def __init__(self):
         self.set_temperature = 0
+        self.set_illuminance = 0
 
-    def Update(self, new):
+    def UpdateHeater(self, new):
         self.set_temperature = float(new)
+
+    def UpdateDimmer(self, new):
+        self.set_illuminance = new
 
     def GetTemperature(self):
         return self.set_temperature
+    
+    def GetIlluminance(self):
+        return self.set_illuminance
 
 class ServerCurrentParameters:
     def __init__(self):
         self.cur_temperature = 0
+        self.set_illuminance = 0
 
-    def Update(self, new):
+    def UpdateHeater(self, new):
         self.cur_temperature = new
+
+    def UpdateDimmer(self, new):
+        self.set_illuminance = new
 
     def GetTemperature(self):
         return self.cur_temperature
+
+    def GetIlluminance(self):
+        return self.set_illuminance
 
 def calc_correction_temp(set_val, curr_val):
     correction = set_val - curr_val
     return round(correction, 2)
 
+def calc_correction_illuminance(set_val, curr_val):
+    correction = set_val - curr_val
+    return round(correction, 1)
+
 async def pull_data(state):
     async with aiosqlite.connect(db_path) as db:
-        async with db.execute("SELECT set_temperature_1 FROM WEB_MANAGER_LOGS ORDER BY id DESC LIMIT 1") as cursor:
+        async with db.execute("SELECT set_temperature, set_illuminance FROM WEB_MANAGER ORDER BY id DESC LIMIT 1") as cursor:
             new_val = await cursor.fetchone()
-            state.Update(new_val[0])
+            set_illuminance = new_val[1]
+            heater_params = new_val[0]
+            state.UpdateHeater(heater_params)
+            state.UpdateDimmer(set_illuminance)
 
 async def periodic_task(state, log_manager):
     while True:

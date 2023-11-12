@@ -7,11 +7,11 @@
 <body>
     <h2>Set Parameters</h2>
     <form method="post" action="/submit">
-        <label for="temperature1">Set Temperature 1:</label>
-        <input type="number" step="0.01" name="temperature1" required>
+        <label for="temperature">Set heater temperature:</label>
+        <input type="number" step="1" name="temperature" min=10 max=30 required>
 
-        <label for="temperature2">Set Temperature 2:</label>
-        <input type="number" step="0.01" name="temperature2" required>
+        <label for="illuminance">Set dimmer illuminance:</label>
+        <input type="number" step="10" name="illuminance" min=0 max=2000 required>
 
         <input type="submit" value="Submit">
     </form>
@@ -19,15 +19,15 @@
     <h3>Last Update:</h3>
     {% if last_update %}
     <p>Time: {{ last_update[1] }}</p>
-    <p>Temperature 1: {{ last_update[2] }}</p>
-    <p>Temperature 2: {{ last_update[3] }}</p>
+    <p>Heater set temperature: {{ last_update[2] }}</p>
+    <p>Dimmer set illuminance: {{ last_update[3] }}</p>
     {% else %}
     <p>No data available</p>
     {% endif %}
 
     <div class="button-container">
-        <a href="/logs/client1" class="button">Client 1 Logs</a>
-        <a href="/logs/client2" class="button">Client 2 Logs</a>
+        <a href="/logs/heater" class="button">Heater Logs</a>
+        <a href="/logs/dimmer" class="button">Dimmer Logs</a>
     </div>
 </body>
 </html>

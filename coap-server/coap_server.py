@@ -6,7 +6,7 @@ import aiocoap.resource as resource
 
 import ssl
 
-from coordinator import periodic_task, ServerSetParameters, ServerCurrentParameters, calc_correction_temp
+from coordinator import periodic_task, ServerSetParameters, ServerCurrentParameters, calc_correction_temp, calc_correction_illuminance
 from logs_manager import LogsManager
 
 dtls_enabled = False
@@ -31,20 +31,20 @@ class HeaterResource(resource.Resource):
         self.temperature = float(decoded)
 
     async def render_get(self, request):
-        print("\nReceived curr_temp.GET.Req\n")
+        print("\nReceived heater.GET.Req\n")
         self.encodeContent(self.temperature)
-        print("\Responding with curr_temp.GET.Rsp\n")
+        print("\Responding with heater.GET.Rsp\n")
         return aiocoap.Message(payload=self.encoded)
     
     async def render_put(self, request):
-        print("\nReceived curr_temp.PUT.Req")
+        print("\nReceived heater.PUT.Req")
 
         # Decode received request's payload from ascii, convert to temp format
         self.decodeContent(request.payload)
-        print("New curr_temp value on the server side: " + str(self.temperature))
+        print("New current_temp value on the server side: " + str(self.temperature))
 
         # Update current temperature value from client req
-        server_cur_params.Update(self.temperature)
+        server_cur_params.UpdateHeater(self.temperature)
 
         # Calculate temperature correction to send in resp
         correction = calc_correction_temp(server_set_params.GetTemperature(), server_cur_params.GetTemperature())
@@ -53,11 +53,54 @@ class HeaterResource(resource.Resource):
         self.encodeContent(correction)
 
         # Log request
-        logs_manager.AddClient1Log(self.temperature, correction, request.remote.hostinfo)
+        logs_manager.AddHeaterLog(self.temperature, correction, request.remote.hostinfo)
         
 
         # Send the response to client
-        print("Responding with curr_temp.PUT.Rsp\n")
+        print("Responding with heater.PUT.Rsp\n")
+        return aiocoap.Message(code=aiocoap.CHANGED, payload=self.encoded)
+    
+class DimmerResource(resource.Resource):
+    def __init__(self):
+        super().__init__()
+        self.illuminance = 300
+
+    def encodeContent(self, value):
+        retVal = "{:.1f}".format(value)
+        self.encoded = retVal.encode('ascii')
+
+    def decodeContent(self, payload):
+        decoded = payload.decode('ascii')
+        decoded = decoded.strip('\x00')
+        self.illuminance = float(decoded)
+
+    async def render_get(self, request):
+        print("\nReceived dimmer.GET.Req\n")
+        self.encodeContent(self.illuminance)
+        print("\Responding with dimmer.GET.Rsp\n")
+        return aiocoap.Message(payload=self.encoded)
+    
+    async def render_put(self, request):
+        print("\nReceived dimmer.PUT.Req")
+
+        # Decode received request's payload from ascii, convert to temp format
+        self.decodeContent(request.payload)
+        print("New current_illuminance value on the server side: " + str(self.illuminance))
+
+        # Update current illuminance value from client req
+        server_cur_params.UpdateDimmer(self.illuminance)
+
+        # Calculate illuminance correction to send in resp
+        correction = calc_correction_illuminance(server_set_params.GetIlluminance(), server_cur_params.GetIlluminance())
+
+        # Encode response payload in ascii
+        self.encodeContent(correction)
+
+        # Log request
+        logs_manager.AddHeaterLog(self.illuminance, correction, request.remote.hostinfo)
+        
+        # Send the response to client
+        print("Responding with dimmer.PUT.Rsp\n")
         return aiocoap.Message(code=aiocoap.CHANGED, payload=self.encoded)
 
 async def main():

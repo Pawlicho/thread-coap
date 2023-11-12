@@ -22,22 +22,22 @@ def CreateTables(db_path):
         cursor = conn.cursor()
 
         CreateWemMenagerLogsTable(conn)
-        CreateClient1LogsTable(conn)
-        CreateClient2LogsTable(conn)
+        CreateHeaterTable(conn)
+        CreateDimmerTable(conn)
 
 def CreateWemMenagerLogsTable(conn):
     cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS WEB_MANAGER_LOGS (
+    cursor.execute('''CREATE TABLE IF NOT EXISTS WEB_MANAGER (
                    id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
                    time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                   set_temperature_1 REAL NOT NULL,                   
-                   set_temperature_2 REAL NOT NULL
+                   set_temperature REAL NOT NULL,                   
+                   set_illuminance REAL NOT NULL
                    )''')
     conn.commit()
 
-def CreateClient1LogsTable(conn):
+def CreateHeaterTable(conn):
     cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS CLIENT_1_LOGS (
+    cursor.execute('''CREATE TABLE IF NOT EXISTS HEATER (
                    id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
                    time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                    measured_temperature REAL NOT NULL,
@@ -46,13 +46,13 @@ def CreateClient1LogsTable(conn):
                    )''')
     conn.commit()
     
-def CreateClient2LogsTable(conn):
+def CreateDimmerTable(conn):
     cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS CLIENT_2_LOGS (
+    cursor.execute('''CREATE TABLE IF NOT EXISTS DIMMER (
                    id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
                    time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                   measured_temperature REAL NOT NULL,
-                   sent_temperature_correction REAL,
+                   measured_illuminance REAL NOT NULL,
+                   sent_illuminance_correction REAL,
                    src_IP TEXT DEFAULT 'Unknown'
                    )''')
     conn.commit()
@@ -62,14 +62,14 @@ DropAllTables(db_path)
 CreateTables(db_path)
 # with sqlite3.connect(db_path) as conn:
 #     cursor = conn.cursor()
-#     cursor.execute('''SELECT * FROM CLIENT_1_LOGS''')
+#     cursor.execute('''SELECT * FROM HEATER''')
 #     a = cursor.fetchall()
 #     # print(type(a))
 #     # for i in range(0, 10):
-#     #     cursor.execute('''INSERT INTO CLIENT_1_LOGS (measured_temperature, sent_temperature_correction) VALUES(:measured_temperature, :sent_temperature_correction)''',
+#     #     cursor.execute('''INSERT INTO HEATER (measured_temperature, sent_temperature_correction) VALUES(:measured_temperature, :sent_temperature_correction)''',
 #     #                 {'measured_temperature':i, 'sent_temperature_correction': i / 2 * -1})
 #     #     conn.commit()
 #     #     time.sleep(3)
-#     cursor.execute('''SELECT * FROM CLIENT_1_LOGS ORDER BY id DESC LIMIT 1''')
+#     cursor.execute('''SELECT * FROM HEATER ORDER BY id DESC LIMIT 1''')
 #     a = cursor.fetchall()
 #     print(a)

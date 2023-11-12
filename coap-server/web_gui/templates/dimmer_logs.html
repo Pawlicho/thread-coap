@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Client 2 Logs</title>
+    <title>Dimmer Logs</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='logs.css') }}">
     </style>
 </head>
@@ -12,8 +12,8 @@
         <tr>
             <th>ID</th>
             <th>Time</th>
-            <th>Measured Temperature</th>
-            <th>Sent Temperature Correction</th>
+            <th>Measured Illuminance</th>
+            <th>Sent Illuminance Correction</th>
             <th>Source IP</th>
         </tr>
         {% for log in logs_data %}

@@ -5,34 +5,34 @@ app = Flask(__name__)
 
 db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'
 
-def insert_data(temperature1, temperature2):
+def insert_data(temperature, illuminance):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO WEB_MANAGER_LOGS (set_temperature_1, set_temperature_2) VALUES (?, ?)",
-                   (temperature1, temperature2))
+    cursor.execute("INSERT INTO WEB_MANAGER (set_temperature, set_illuminance) VALUES (?, ?)",
+                   (temperature, illuminance))
     conn.commit()
     conn.close()
 
 def get_web_manager_last_update():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM WEB_MANAGER_LOGS ORDER BY id DESC LIMIT 1")
+    cursor.execute("SELECT * FROM WEB_MANAGER ORDER BY id DESC LIMIT 1")
     last_update = cursor.fetchone()
     conn.close()
     return last_update
 
-def get_client_1_logs():
+def get_heater_logs():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM CLIENT_1_LOGS ORDER BY id DESC")
+    cursor.execute("SELECT * FROM HEATER ORDER BY id DESC")
     logs = cursor.fetchall()
     conn.close()
     return logs
 
-def get_client_2_logs():
+def get_dimmer_logs():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM CLIENT_2_LOGS ORDER BY id DESC")
+    cursor.execute("SELECT * FROM DIMMER ORDER BY id DESC")
     logs = cursor.fetchall()
     conn.close()
     return logs
@@ -44,21 +44,21 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    temperature1 = request.form['temperature1']
-    temperature2 = request.form['temperature2']
-    insert_data(temperature1, temperature2)
+    temperature = request.form['temperature']
+    illuminance = request.form['illuminance']
+    insert_data(temperature, illuminance)
     last_update = get_web_manager_last_update()
     return render_template('index.html', last_update=last_update)
 
-@app.route('/logs/client1')
-def logs_client1():
-    logs_data = get_client_1_logs()
-    return render_template('logs_client1.html', logs_data=logs_data)
+@app.route('/logs/heater')
+def heater_logs():
+    logs_data = get_heater_logs()
+    return render_template('heater_logs.html', logs_data=logs_data)
 
-@app.route('/logs/client2')
-def logs_client2():
-    logs_data = get_client_2_logs()
-    return render_template('logs_client2.html', logs_data=logs_data)
+@app.route('/logs/dimmer')
+def dimmer_logs():
+    logs_data = get_dimmer_logs()
+    return render_template('dimmer_logs.html', logs_data=logs_data)
 
 if __name__ == '__main__':
     # CreateTables(db_path)
