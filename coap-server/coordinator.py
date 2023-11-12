@@ -2,6 +2,8 @@
 import asyncio
 import aiosqlite
 
+from logs_manager import LogsManager
+
 db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'
 
 class ServerSetParameters:
@@ -34,10 +36,13 @@ async def pull_data(state):
             new_val = await cursor.fetchone()
             state.Update(new_val[0])
 
-async def periodic_task(state):
+async def periodic_task(state, log_manager):
     while True:
         # Add your periodic task logic here
         await pull_data(state)
+
+        await log_manager.PushLogs()
+        print("Pushed logs into Database")
 
         # Use asyncio.sleep with await to yield control to the event loop
         await asyncio.sleep(5)  # Adjust the sleep interval as needed
