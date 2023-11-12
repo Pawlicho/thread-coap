@@ -3,11 +3,13 @@ import asyncio
 
 import aiocoap
 import aiocoap.resource as resource
-import sqlite3
+
+import ssl
 
 from coordinator import periodic_task, ServerSetParameters, ServerCurrentParameters, calc_correction_temp
 from logs_manager import LogsManager
 
+dtls_enabled = False
 
 db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'
 server_set_params = ServerSetParameters()
@@ -71,8 +73,19 @@ async def main():
     # Routine for database set parameters pulling
     periodic_task_coroutine = asyncio.create_task(periodic_task(server_set_params, logs_manager))
 
-    # Start Server
-    await aiocoap.Context.create_server_context(root, bind=(host, port))
+    if dtls_enabled:
+        # Path to the server's private key and public key certificate
+        private_key_path = '/home/tymoczko/src/thread-coap/coap-server/private-key.pem'
+        certificate_path = '/home/tymoczko/src/thread-coap/coap-server/certificate.pem'
+
+        # Create an SSL context with server credentials
+        server_credentials = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        server_credentials.load_cert_chain(certfile=certificate_path, keyfile=private_key_path)
+
+        # Start Server
+        await aiocoap.Context.create_server_context(root, bind=(host, port), transports=['tinydtls_server'], server_credentials=server_credentials)
+    else:
+        await aiocoap.Context.create_server_context(root, bind=(host, port))
 
     # Await for periodic, infinite routine
     await periodic_task_coroutine

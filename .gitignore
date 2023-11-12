@@ -13,3 +13,7 @@ thread-coap-client/build*/
 env/
 
 */__pycache__/
+
+#SSL
+*.pem
+*.csr
