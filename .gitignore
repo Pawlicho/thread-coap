@@ -6,6 +6,9 @@
 # build
 thread-coap-client-dimmer/build*/
 thread-coap-client-heater/build*/
+*.bin
+*.hex
+*.elf
 
 #VSCode
 .vscode
