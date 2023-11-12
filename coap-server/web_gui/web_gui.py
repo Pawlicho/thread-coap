@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
+
 import sqlite3
 
 app = Flask(__name__)
@@ -59,6 +60,24 @@ def heater_logs():
 def dimmer_logs():
     logs_data = get_dimmer_logs()
     return render_template('dimmer_logs.html', logs_data=logs_data)
+
+@app.route('/clear/dimmer', methods=['POST'])
+def clear_dimmer_logs():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM DIMMER")
+    conn.commit()
+    conn.close()
+    return redirect(url_for('dimmer_logs'))
+
+@app.route('/clear/heater', methods=['POST'])
+def clear_heater_logs():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM HEATER")
+    conn.commit()
+    conn.close()
+    return redirect(url_for('heater_logs'))
 
 if __name__ == '__main__':
     # CreateTables(db_path)

@@ -31,3 +31,21 @@ tr:nth-child(even) {
 p {
     text-align: center;
 }
+
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #fff;
+    color: #333; 
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #f2f2f2;
+}

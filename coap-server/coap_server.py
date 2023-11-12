@@ -97,7 +97,7 @@ class DimmerResource(resource.Resource):
         self.encodeContent(correction)
 
         # Log request
-        logs_manager.AddHeaterLog(self.illuminance, correction, request.remote.hostinfo)
+        logs_manager.AddDimmerLog(self.illuminance, correction, request.remote.hostinfo)
         
         # Send the response to client
         print("Responding with dimmer.PUT.Rsp\n")
@@ -112,6 +112,7 @@ async def main():
     # Set up resources on server side
     root = resource.Site()
     root.add_resource(['heater'], HeaterResource())
+    root.add_resource(['dimmer'], DimmerResource())
 
     # Routine for database set parameters pulling
     periodic_task_coroutine = asyncio.create_task(periodic_task(server_set_params, logs_manager))

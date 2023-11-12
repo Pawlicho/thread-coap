@@ -6,6 +6,11 @@
 </head>
 <body>
     <h1>Logs</h1>
+    <div class="button-container">
+        <form method="post" action="/clear/heater">
+            <button type="submit">Clear Heater Logs</button>
+        </form>
+    </div>
     {% if logs_data %}
     <table>
         <tr>
