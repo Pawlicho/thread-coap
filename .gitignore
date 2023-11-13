@@ -6,6 +6,7 @@
 # build
 thread-coap-client-dimmer/build*/
 thread-coap-client-heater/build*/
+thread-ftd/build*/
 *.bin
 *.hex
 *.elf
