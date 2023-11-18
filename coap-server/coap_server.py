@@ -117,6 +117,8 @@ async def main():
     # Routine for database set parameters pulling
     periodic_task_coroutine = asyncio.create_task(periodic_task(server_set_params, logs_manager))
 
+    await aiocoap.Context.create_server_context(root, bind=(host, port))
+
     # Await for periodic, infinite routine
     await periodic_task_coroutine
 
