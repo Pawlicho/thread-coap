@@ -1,0 +1,1092 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_THREAD",
+      "label": "Thread",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "frser-sqlite-datasource",
+      "pluginName": "SQLite"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "datasource",
+      "id": "frser-sqlite-datasource",
+      "name": "SQLite",
+      "version": "3.3.2"
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "New link",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "New link",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "New link",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "New link",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "liveNow": true,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Gauges",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_THREAD}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY id DESC;\n",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY id DESC;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "hide": false,
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY id DESC;",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY id DESC;",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Temperature Gauge",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_THREAD}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "lux"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "hide": false,
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        }
+      ],
+      "title": "Illuminance Gauge",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 7,
+      "panels": [],
+      "title": "Time Graphs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_THREAD}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Temperature [°C]",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Set_Temperature"
+            },
+            "properties": [
+              {
+                "id": "custom.lineInterpolation",
+                "value": "stepBefore"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Measured_Temperature"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 20
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "queryText": "WITH converted AS (\n    SELECT\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "queryType": "time series",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "hide": false,
+          "queryText": "WITH converted AS (\n    SELECT\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "queryType": "time series",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "hide": false,
+          "queryText": "WITH converted AS (\n    SELECT\n        sent_temperature_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, correction\nFROM converted",
+          "queryType": "time series",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        sent_temperature_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, correction\nFROM converted",
+          "refId": "C",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        }
+      ],
+      "title": "Temperature over Time",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_THREAD}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Illuminance [Lux]",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "lux"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Set_Illuminance"
+            },
+            "properties": [
+              {
+                "id": "custom.lineInterpolation",
+                "value": "stepBefore"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Measured_Illuminance"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 30
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "queryText": "WITH converted AS (\n    SELECT\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "hide": false,
+          "queryText": "WITH converted AS (\n    SELECT\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "queryType": "time series",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "hide": false,
+          "queryText": "WITH converted AS (\n    SELECT\n        sent_illuminance_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, correction\nFROM converted\nORDER BY datetime ASC;",
+          "queryType": "time series",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        sent_illuminance_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, correction\nFROM converted\nORDER BY datetime ASC;",
+          "refId": "C",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        }
+      ],
+      "title": "Illuminance over Time ",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 6,
+      "panels": [],
+      "title": "Tables",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_THREAD}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 67
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "datetime"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 166
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Set_Temperature"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 144
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "set_temperature"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 171
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "set_illuminance"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 122
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 19
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance,\n        set_temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT id, datetime, set_temperature, set_illuminance\nFROM converted\nORDER BY datetime DESC;",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance,\n        set_temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT id, datetime, set_temperature, set_illuminance\nFROM converted\nORDER BY datetime DESC;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        }
+      ],
+      "title": "WEB_MANAGER Table",
+      "transparent": true,
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_THREAD}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 68
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "datetime"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 163
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "measured_illuminance"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 183
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sent_illuminance_correction"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 248
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "src_IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 6,
+        "y": 19
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance,\n        sent_illuminance_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT id, datetime, measured_illuminance, sent_illuminance_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance,\n        sent_illuminance_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT id, datetime, measured_illuminance, sent_illuminance_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        }
+      ],
+      "title": "DIMMER Table",
+      "transparent": true,
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_THREAD}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "datetime"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "measured_temperature"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 176
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sent_temperature_correction"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 250
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "src_IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 161
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 15,
+        "y": 19
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "sent_temperature_correction"
+          }
+        ]
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_THREAD}"
+          },
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature,\n        sent_temperature_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT id, datetime, measured_temperature, sent_temperature_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "queryType": "table",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature,\n        sent_temperature_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT id, datetime, measured_temperature, sent_temperature_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        }
+      ],
+      "title": "HEATER Table",
+      "transparent": true,
+      "type": "table"
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": false,
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m"
+    ]
+  },
+  "timezone": "",
+  "title": "Thread-CoAP App",
+  "uid": "a93c02db-0f60-4e5b-9680-a92f87da3efe",
+  "version": 11,
+  "weekStart": ""
+}
