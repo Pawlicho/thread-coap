@@ -4,6 +4,7 @@
 #include "mtd.h"
 #include "thread.h"
 #include "heater.h"
+#include "nat64_utils.h"
 
 #include <zephyr/net/coap.h>
 #include <zephyr/kernel.h>
@@ -37,8 +38,6 @@ static void increase_current_temp_work_cb(struct k_work *item)
     LOG_INF("Increased environment temperature by %.2f. Current temperature: %.2f.",
             BUTTON_TEMPERATURE_UPDATE_STEP,
             heater.current_temp);
-
-
 }
 
 /* Tasks declaration */
@@ -63,9 +62,6 @@ int client_init()
 {
     int err;
 
-    serv_addr_init();
-    coap_init(AF_INET6, NULL);
-
     k_work_init(&update_heater_work, update_heater_work_cb);
     k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
     k_work_init(&decrease_current_temp_work, decrease_current_temp_work_cb);
@@ -76,13 +72,12 @@ int client_init()
         LOG_ERR("Unable to set openthread_state_changed_cb_register: %d", err);
         return err;
     }
-    else
-    if ( (err = openthread_start(openthread_get_default_context())) != 0)
-    {
-        LOG_ERR("Unable to start Openthread: %d", err);
-        return err;
-    }
 
+    uint8_t ipv6_address[INET6_ADDRSTRLEN + 1] = {0};
+
+    while (!(synthesize_ipv4_to_ipv6(ipv6_address)));
+    serv_addr_init(ipv6_address);
+    coap_init(AF_INET6, NULL);
     return 0;
 }
 
@@ -107,3 +102,4 @@ void increase_current_temp(void)
 {
     k_work_submit(&increase_current_temp_work);
 }
+

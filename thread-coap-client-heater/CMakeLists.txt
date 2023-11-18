@@ -7,6 +7,7 @@ target_sources(app PRIVATE
     src/main.c
     src/communication/coap/coap_client.c
     src/communication/thread/thread.c
+    src/communication/thread/nat64_utils.c
     src/communication/thread/mtd/mtd.c
     src/io/buttons/buttons.c
     src/io/simulated/regulator/regulator.c
