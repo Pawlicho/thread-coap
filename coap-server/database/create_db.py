@@ -1,5 +1,4 @@
 import sqlite3
-import time
 
 def DropAllTables(db_path):
     with sqlite3.connect(db_path) as conn:
@@ -56,20 +55,3 @@ def CreateDimmerTable(conn):
                    src_IP TEXT DEFAULT 'Unknown'
                    )''')
     conn.commit()
-
-db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'
-DropAllTables(db_path)
-CreateTables(db_path)
-# with sqlite3.connect(db_path) as conn:
-#     cursor = conn.cursor()
-#     cursor.execute('''SELECT * FROM HEATER''')
-#     a = cursor.fetchall()
-#     # print(type(a))
-#     # for i in range(0, 10):
-#     #     cursor.execute('''INSERT INTO HEATER (measured_temperature, sent_temperature_correction) VALUES(:measured_temperature, :sent_temperature_correction)''',
-#     #                 {'measured_temperature':i, 'sent_temperature_correction': i / 2 * -1})
-#     #     conn.commit()
-#     #     time.sleep(3)
-#     cursor.execute('''SELECT * FROM HEATER ORDER BY id DESC LIMIT 1''')
-#     a = cursor.fetchall()
-#     print(a)

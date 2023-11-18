@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for
-
 import sqlite3
 
 app = Flask(__name__)
@@ -80,5 +79,4 @@ def clear_heater_logs():
     return redirect(url_for('heater_logs'))
 
 if __name__ == '__main__':
-    # CreateTables(db_path)
     app.run(debug=True)

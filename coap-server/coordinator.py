@@ -1,7 +1,6 @@
 
 import asyncio
 import aiosqlite
-
 from logs_manager import LogsManager
 
 db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'

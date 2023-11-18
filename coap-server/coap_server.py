@@ -4,12 +4,9 @@ import asyncio
 import aiocoap
 import aiocoap.resource as resource
 
-import ssl
-
 from coordinator import periodic_task, ServerSetParameters, ServerCurrentParameters, calc_correction_temp, calc_correction_illuminance
 from logs_manager import LogsManager
-
-dtls_enabled = False
+from database.create_db import CreateTables
 
 db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'
 server_set_params = ServerSetParameters()
@@ -105,6 +102,9 @@ class DimmerResource(resource.Resource):
 
 async def main():
 
+    # Create Database if does not exist
+    CreateTables(db_path=db_path)
+
     # Server address and port number
     host = "172.18.0.1"
     port = 8383
@@ -117,20 +117,6 @@ async def main():
     # Routine for database set parameters pulling
     periodic_task_coroutine = asyncio.create_task(periodic_task(server_set_params, logs_manager))
 
-    if dtls_enabled:
-        # Path to the server's private key and public key certificate
-        private_key_path = '/home/tymoczko/src/thread-coap/coap-server/private-key.pem'
-        certificate_path = '/home/tymoczko/src/thread-coap/coap-server/certificate.pem'
-
-        # Create an SSL context with server credentials
-        server_credentials = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        server_credentials.load_cert_chain(certfile=certificate_path, keyfile=private_key_path)
-
-        # Start Server
-        await aiocoap.Context.create_server_context(root, bind=(host, port), transports=['tinydtls_server'], server_credentials=server_credentials)
-    else:
-        await aiocoap.Context.create_server_context(root, bind=(host, port))
-
     # Await for periodic, infinite routine
     await periodic_task_coroutine
 
@@ -139,4 +125,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main ())
+    asyncio.run(main())

@@ -1,5 +1,4 @@
 import datetime
-import asyncio
 import aiosqlite
 
 class LogsManager:
@@ -22,7 +21,7 @@ class LogsManager:
             for log in self.buff_dimmer:
                 await cursor.execute('''INSERT INTO DIMMER (time, measured_illuminance, sent_illuminance_correction, src_IP)
                                      VALUES(:time, :measured_illuminance, :sent_illuminance_correction, :src_IP)''',
-                                     {'time': log['time'], 'measured_illuminance': log['sent_illuminance_correction'], 'sent_illuminance_correction': log['sent_illuminance_correction'], 'src_IP': log['src_IP']})
+                                     {'time': log['time'], 'measured_illuminance': log['measured_illuminance'], 'sent_illuminance_correction': log['sent_illuminance_correction'], 'src_IP': log['src_IP']})
             await conn.commit()
         self.Clear()
     

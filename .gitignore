@@ -18,7 +18,7 @@ thread-ftd/build*/
 env/
 
 #Python
-*/__pycache__/
+*__pycache__*
 
 # Databases
 *.db
