@@ -26,3 +26,6 @@ env/
 #SSL
 *.pem
 *.csr
+
+# Exclude private files
+private*/*

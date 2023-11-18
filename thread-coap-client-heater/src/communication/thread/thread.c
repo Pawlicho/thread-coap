@@ -1,4 +1,5 @@
 #include "thread.h"
+#include "client_utils.h"
 
 void on_thread_state_changed(otChangedFlags flags,
                              struct openthread_context *ot_context,
@@ -12,6 +13,7 @@ void on_thread_state_changed(otChangedFlags flags,
             case OT_DEVICE_ROLE_ROUTER:
             case OT_DEVICE_ROLE_LEADER:
             is_connected = true;
+            // client_init();
             break;
 
             case OT_DEVICE_ROLE_DISABLED:
