@@ -8,7 +8,7 @@
 #include <zephyr/net/coap.h>
 #include <zephyr/kernel.h>
 
-#define BUTTON_ILLUMINANCE_UPDATE_STEP  (50)
+#define BUTTON_ILLUMINANCE_UPDATE_STEP  (50.0f)
 
 LOG_MODULE_DECLARE(COAP_CLIENT);
 

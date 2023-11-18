@@ -6,7 +6,7 @@
 #include "sensor.h"
 #include "regulator.h"
 
-LOG_MODULE_REGISTER(COAP_CLIENT, LOG_LEVEL_DBG);
+LOG_MODULE_REGISTER(COAP_CLIENT, CONFIG_LOG_DEFAULT_LEVEL);
 
 int main(void)
 {
@@ -17,6 +17,12 @@ int main(void)
 		LOG_ERR("Cannot init buttons (error: %d)", ret);
 		return ret;
 	}
+
+    if ( (ret = dk_leds_init()) != 0 )
+    {
+        LOG_ERR("Cannot init leds (error: %d)", ret);
+		return ret;
+    }
 
     if ( (ret = client_init()) != 0)
     {
