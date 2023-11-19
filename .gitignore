@@ -10,6 +10,7 @@ thread-ftd/build*/
 *.bin
 *.hex
 *.elf
+*.out
 
 #VSCode
 .vscode
