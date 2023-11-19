@@ -183,9 +183,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "${DS_THREAD}"
           },
-          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY id DESC;\n",
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY id DESC\nLIMIT 1;\n",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY id DESC;\n",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY id DESC\nLIMIT 1;\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -199,9 +199,9 @@
             "uid": "${DS_THREAD}"
           },
           "hide": false,
-          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY id DESC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY id DESC\nLIMIT 1;",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY id DESC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY id DESC\nLIMIT 1;",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -268,9 +268,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "${DS_THREAD}"
           },
-          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY id DESC\nLIMIT 1;",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY id DESC\nLIMIT 1;",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -284,9 +284,9 @@
             "uid": "${DS_THREAD}"
           },
           "hide": false,
-          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY id DESC\nLIMIT 1;",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY id DESC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY id DESC\nLIMIT 1;",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -407,6 +407,31 @@
                 "value": 20
               }
             ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Set_Temperature",
+                  "Measured_Temperature"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
@@ -424,6 +449,9 @@
           "placement": "right",
           "showLegend": true
         },
+        "timezone": [
+          "browser"
+        ],
         "tooltip": {
           "mode": "single",
           "sort": "none"
@@ -435,9 +463,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "${DS_THREAD}"
           },
-          "queryText": "WITH converted AS (\n    SELECT\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY datetime ASC;",
           "queryType": "time series",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        measured_temperature AS Measured_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, Measured_Temperature\nFROM converted\nORDER BY datetime ASC;",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -451,9 +479,9 @@
             "uid": "${DS_THREAD}"
           },
           "hide": false,
-          "queryText": "WITH converted AS (\n    SELECT\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY datetime ASC;",
           "queryType": "time series",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY datetime ASC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        set_temperature AS Set_Temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Temperature\nFROM converted\nORDER BY datetime ASC;",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -467,9 +495,9 @@
             "uid": "${DS_THREAD}"
           },
           "hide": false,
-          "queryText": "WITH converted AS (\n    SELECT\n        sent_temperature_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, correction\nFROM converted",
+          "queryText": "WITH converted AS (\n    SELECT\n        sent_temperature_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, correction\nFROM converted",
           "queryType": "time series",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        sent_temperature_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, correction\nFROM converted",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        sent_temperature_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT datetime, correction\nFROM converted",
           "refId": "C",
           "timeColumns": [
             "time",
@@ -562,6 +590,31 @@
                 "value": 30
               }
             ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Measured_Illuminance",
+                  "Set_Illuminance"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
@@ -590,9 +643,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "${DS_THREAD}"
           },
-          "queryText": "WITH converted AS (\n    SELECT\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY datetime ASC;",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        measured_illuminance AS Measured_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, Measured_Illuminance\nFROM converted\nORDER BY datetime ASC;",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -606,9 +659,9 @@
             "uid": "${DS_THREAD}"
           },
           "hide": false,
-          "queryText": "WITH converted AS (\n    SELECT\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY datetime ASC;",
           "queryType": "time series",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY datetime ASC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        set_illuminance AS Set_Illuminance,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT datetime, Set_Illuminance\nFROM converted\nORDER BY datetime ASC;",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -622,9 +675,9 @@
             "uid": "${DS_THREAD}"
           },
           "hide": false,
-          "queryText": "WITH converted AS (\n    SELECT\n        sent_illuminance_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, correction\nFROM converted\nORDER BY datetime ASC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        sent_illuminance_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, correction\nFROM converted\nORDER BY datetime ASC;",
           "queryType": "time series",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        sent_illuminance_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, correction\nFROM converted\nORDER BY datetime ASC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        sent_illuminance_correction AS correction,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT datetime, correction\nFROM converted\nORDER BY datetime ASC;",
           "refId": "C",
           "timeColumns": [
             "time",
@@ -770,9 +823,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "${DS_THREAD}"
           },
-          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance,\n        set_temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT id, datetime, set_temperature, set_illuminance\nFROM converted\nORDER BY datetime DESC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance,\n        set_temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT id, datetime, set_temperature, set_illuminance\nFROM converted\nORDER BY datetime DESC;",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance,\n        set_temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT id, datetime, set_temperature, set_illuminance\nFROM converted\nORDER BY datetime DESC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        set_illuminance,\n        set_temperature,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        WEB_MANAGER\n)\nSELECT id, datetime, set_temperature, set_illuminance\nFROM converted\nORDER BY datetime DESC;",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -906,9 +959,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "${DS_THREAD}"
           },
-          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance,\n        sent_illuminance_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT id, datetime, measured_illuminance, sent_illuminance_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance,\n        sent_illuminance_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT id, datetime, measured_illuminance, sent_illuminance_correction, src_IP\nFROM converted\nORDER BY id DESC;",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance,\n        sent_illuminance_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        DIMMER\n)\nSELECT id, datetime, measured_illuminance, sent_illuminance_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_illuminance,\n        sent_illuminance_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        DIMMER\n)\nSELECT id, datetime, measured_illuminance, sent_illuminance_correction, src_IP\nFROM converted\nORDER BY id DESC;",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -1046,9 +1099,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "${DS_THREAD}"
           },
-          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature,\n        sent_temperature_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT id, datetime, measured_temperature, sent_temperature_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "queryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature,\n        sent_temperature_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT id, datetime, measured_temperature, sent_temperature_correction, src_IP\nFROM converted\nORDER BY id DESC;",
           "queryType": "table",
-          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature,\n        sent_temperature_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time) AS datetime\n    FROM\n        HEATER\n)\nSELECT id, datetime, measured_temperature, sent_temperature_correction, src_IP\nFROM converted\nORDER BY id DESC;",
+          "rawQueryText": "WITH converted AS (\n    SELECT\n        id,\n        measured_temperature,\n        sent_temperature_correction,\n        src_IP,\n        strftime('%Y-%m-%dT%H:%M:%SZ', time, '-1 hour') AS datetime\n    FROM\n        HEATER\n)\nSELECT id, datetime, measured_temperature, sent_temperature_correction, src_IP\nFROM converted\nORDER BY id DESC;",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -1062,7 +1115,7 @@
       "type": "table"
     }
   ],
-  "refresh": "5m",
+  "refresh": "1m",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -1070,8 +1123,8 @@
     "list": []
   },
   "time": {
-    "from": "now-2d",
-    "to": "now"
+    "from": "now-17m",
+    "to": "now-13m"
   },
   "timepicker": {
     "hidden": false,
@@ -1084,9 +1137,9 @@
       "15m"
     ]
   },
-  "timezone": "",
-  "title": "Thread-CoAP App",
-  "uid": "a93c02db-0f60-4e5b-9680-a92f87da3efe",
-  "version": 11,
+  "timezone": "browser",
+  "title": "Thread-CoAP App Copy",
+  "uid": "db41bd21-eebb-4f0b-afa9-e60c7c703ecd",
+  "version": 3,
   "weekStart": ""
 }
