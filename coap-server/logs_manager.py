@@ -1,4 +1,7 @@
 import datetime
+from datetime import datetime
+import pytz
+
 import aiosqlite
 
 class LogsManager:
@@ -26,11 +29,15 @@ class LogsManager:
         self.Clear()
     
     def AddHeaterLog(self, measured_temp, correction_temp, source_ip):
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        poland_timezone = pytz.timezone('Europe/Warsaw')
+        timestamp = datetime.now(poland_timezone).strftime("%Y-%m-%d %H:%M:%S")
+        print(timestamp)
         log = {'time': timestamp, 'measured_temperature': measured_temp, 'sent_temperature_correction': correction_temp, 'src_IP': source_ip}
         self.buff_heater.append(log)
 
     def AddDimmerLog(self, measured_illuminance, correction_illuminance, source_ip):
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        poland_timezone = pytz.timezone('Europe/Warsaw')
+        timestamp = datetime.now(poland_timezone).strftime("%Y-%m-%d %H:%M:%S")
+        print(timestamp)
         log = {'time': timestamp, 'measured_illuminance': measured_illuminance, 'sent_illuminance_correction': correction_illuminance, 'src_IP': source_ip}
         self.buff_dimmer.append(log)

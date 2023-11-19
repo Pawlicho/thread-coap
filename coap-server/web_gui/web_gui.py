@@ -1,15 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
+from datetime import datetime
+import pytz
+
 app = Flask(__name__)
 
 db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'
+poland_timezone = pytz.timezone('Europe/Warsaw')
 
 def insert_data(temperature, illuminance):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO WEB_MANAGER (set_temperature, set_illuminance) VALUES (?, ?)",
-                   (temperature, illuminance))
+    timestamp = datetime.now(poland_timezone).strftime("%Y-%m-%d %H:%M:%S")
+    cursor.execute("INSERT INTO WEB_MANAGER (time, set_temperature, set_illuminance) VALUES (?, ?, ?)",
+                   (timestamp, temperature, illuminance))
     conn.commit()
     conn.close()
 
