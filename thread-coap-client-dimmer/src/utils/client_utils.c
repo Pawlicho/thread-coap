@@ -4,6 +4,7 @@
 #include "mtd.h"
 #include "thread.h"
 #include "dimmer.h"
+#include "nat64_utils.h"
 
 #include <zephyr/net/coap.h>
 #include <zephyr/kernel.h>
@@ -62,9 +63,7 @@ static void submit_work_if_connected(struct k_work *work)
 int client_init()
 {
     int err;
-
-    serv_addr_init();
-    coap_init(AF_INET6, NULL);
+    uint8_t ipv6_address[INET6_ADDRSTRLEN + 1] = {0};
 
     k_work_init(&update_dimmer_work, update_dimmer_work_cb);
     k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
@@ -76,12 +75,13 @@ int client_init()
         LOG_ERR("Unable to set openthread_state_changed_cb_register: %d", err);
         return err;
     }
-    else
-    if ( (err = openthread_start(openthread_get_default_context())) != 0)
-    {
-        LOG_ERR("Unable to start Openthread: %d", err);
-        return err;
-    }
+
+    /* Waiting for NAT64 Prefix acquiring */
+    /* This while is kind of "blocking", but without the prefix, nothing runs correctly */
+    while (!(synthesize_ipv4_to_ipv6(ipv6_address)));
+
+    serv_addr_init(ipv6_address);
+    coap_init(AF_INET6, NULL);
 
     return 0;
 }

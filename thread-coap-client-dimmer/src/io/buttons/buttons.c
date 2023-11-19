@@ -14,7 +14,6 @@ void on_button_changed(uint32_t button_state, uint32_t has_changed)
     }
     else if (buttons & DK_BTN3_MSK)
     {
-        updateDimmer();
     }
     else if (buttons & DK_BTN4_MSK)
     {

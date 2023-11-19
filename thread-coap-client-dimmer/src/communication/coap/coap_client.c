@@ -9,12 +9,12 @@ static const char *const dimmer_option[] = { DIMMER_URI_PATH, NULL };
 /* CoAP server address structure */
 static struct sockaddr_in6 server_addr = {};
 
-void serv_addr_init()
+void serv_addr_init(const uint8_t* server_ip_address)
 {
     int err;
     server_addr.sin6_family = AF_INET6;
     server_addr.sin6_port = htons(SERVER_PORT);
-    err = zsock_inet_pton(AF_INET6, SERVER_IPV6_ADDRESS, &server_addr.sin6_addr);
+    err = zsock_inet_pton(AF_INET6, server_ip_address, &server_addr.sin6_addr);
 
     __ASSERT(err == 1, "zsock_inet_pton() failed %d", err);
 }

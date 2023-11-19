@@ -61,6 +61,7 @@ static void submit_work_if_connected(struct k_work *work)
 int client_init()
 {
     int err;
+    uint8_t ipv6_address[INET6_ADDRSTRLEN + 1] = {0};
 
     k_work_init(&update_heater_work, update_heater_work_cb);
     k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
@@ -73,11 +74,13 @@ int client_init()
         return err;
     }
 
-    uint8_t ipv6_address[INET6_ADDRSTRLEN + 1] = {0};
-
+    /* Waiting for NAT64 Prefix acquiring */
+    /* This while is kind of "blocking", but without the prefix, nothing runs correctly */
     while (!(synthesize_ipv4_to_ipv6(ipv6_address)));
+
     serv_addr_init(ipv6_address);
     coap_init(AF_INET6, NULL);
+
     return 0;
 }
 

@@ -17,4 +17,4 @@ int dimmer_reply(const struct coap_packet *response,
 
 void update_dimmer_work_cb(struct k_work *item);
 
-void serv_addr_init();
+void serv_addr_init(const uint8_t* server_ip_address);
