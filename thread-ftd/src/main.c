@@ -54,13 +54,6 @@ int main(void)
         LOG_ERR("Unable to set openthread_state_changed_cb_register: %d", ret);
         return ret;
     }
-    else
-    if ( (ret = openthread_start(openthread_get_default_context())) != 0)
-    {
-        LOG_ERR("Unable to start Openthread: %d", ret);
-        return ret;
-    }
 
-    dk_set_led_on(DK_LED1);
     return 0;
 }
