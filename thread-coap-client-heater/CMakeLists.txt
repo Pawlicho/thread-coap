@@ -9,6 +9,7 @@ target_sources(app PRIVATE
     src/communication/thread/thread.c
     src/communication/thread/nat64_utils.c
     src/communication/thread/mtd/mtd.c
+    src/io/environment.c
     src/io/buttons/buttons.c
     src/io/simulated/regulator/regulator.c
     src/io/simulated/sensor/sensor.c
@@ -20,6 +21,7 @@ target_include_directories(app PUBLIC
     src/communication/coap
     src/communication/thread
     src/communication/thread/mtd
+    src/io
     src/io/buttons
     src/io/simulated/
     src/io/simulated/regulator

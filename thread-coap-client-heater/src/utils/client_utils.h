@@ -13,6 +13,8 @@ void decrease_current_temp(void);
 
 void increase_current_temp(void);
 
-void updateHeater(void);
+void update_tempreture(void);
+
+void update_heater_regulation(void);
 
 void toggle_minimal_sleepy_end_device(void);

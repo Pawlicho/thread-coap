@@ -16,7 +16,7 @@ LOG_MODULE_DECLARE(COAP_CLIENT);
 /* Global var indicating Thread state */
 bool is_connected;
 
-volatile HEATER_CONTEXT_T heater = {.current_temp = -11.23f, .correction = 0};
+volatile HEATER_CONTEXT_T heater = {.current_temp = 19.5f, .output_power = 10};
 
 static struct openthread_state_changed_cb ot_state_chaged_cb = 
 {
@@ -41,7 +41,8 @@ static void increase_current_temp_work_cb(struct k_work *item)
 }
 
 /* Tasks declaration */
-static struct k_work update_heater_work;
+static struct k_work update_temperature_work;
+static struct k_work update_heater_regulation_work;
 static struct k_work toggle_MTD_SED_work;
 static struct k_work decrease_current_temp_work;
 static struct k_work increase_current_temp_work;
@@ -63,7 +64,8 @@ int client_init()
     int err;
     uint8_t ipv6_address[INET6_ADDRSTRLEN + 1] = {0};
 
-    k_work_init(&update_heater_work, update_heater_work_cb);
+    k_work_init(&update_temperature_work, update_temperature_work_cb);
+    k_work_init(&update_heater_regulation_work, update_heater_regulation_work_cb);
     k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
     k_work_init(&decrease_current_temp_work, decrease_current_temp_work_cb);
     k_work_init(&increase_current_temp_work, increase_current_temp_work_cb);
@@ -86,9 +88,14 @@ int client_init()
 
 /* UI functions */
 
-void updateHeater(void)
+void update_tempreture(void)
 {
-    submit_work_if_connected(&update_heater_work);
+    submit_work_if_connected(&update_temperature_work);
+}
+
+void update_heater_regulation(void)
+{
+    submit_work_if_connected(&update_heater_regulation_work);
 }
 
 void toggle_minimal_sleepy_end_device(void)
