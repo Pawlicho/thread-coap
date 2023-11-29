@@ -13,6 +13,8 @@ void decrease_current_illuminance(void);
 
 void increase_current_illuminance(void);
 
-void updateDimmer(void);
+void update_illuminance(void);
+
+void update_dimmer_regulation(void);
 
 void toggle_minimal_sleepy_end_device(void);

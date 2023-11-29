@@ -5,6 +5,7 @@
 #include "buttons.h"
 #include "sensor.h"
 #include "regulator.h"
+#include "environment.h"
 
 LOG_MODULE_REGISTER(COAP_CLIENT, CONFIG_LOG_DEFAULT_LEVEL);
 
@@ -29,6 +30,8 @@ int main(void)
         LOG_ERR("Cannot initialize client (error: %d)", ret);
         return ret;
     }
+
+    environment_init();
 
     sensor_init();
     regulator_init();

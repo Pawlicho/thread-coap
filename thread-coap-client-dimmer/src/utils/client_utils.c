@@ -16,7 +16,7 @@ LOG_MODULE_DECLARE(COAP_CLIENT);
 /* Global var indicating Thread state */
 bool is_connected;
 
-volatile DIMMER_CONTEXT_T dimmer = {.current_illuminance = 300, .correction = 0};
+volatile DIMMER_CONTEXT_T dimmer = {.current_illuminance = 300, .output_power = 10};
 
 static struct openthread_state_changed_cb ot_state_chaged_cb = 
 {
@@ -29,7 +29,6 @@ static void decrease_current_illuminance_work_cb(struct k_work *item)
     LOG_INF("Decreased environment illuminance by %.2f. Current illuminance: %.2f.",
             BUTTON_ILLUMINANCE_UPDATE_STEP,
             dimmer.current_illuminance);
-
 }
 
 static void increase_current_illuminance_work_cb(struct k_work *item)
@@ -38,12 +37,11 @@ static void increase_current_illuminance_work_cb(struct k_work *item)
     LOG_INF("Increased environment illuminance by %.2f. Current illuminance: %.2f.",
             BUTTON_ILLUMINANCE_UPDATE_STEP,
             dimmer.current_illuminance);
-
-
 }
 
 /* Tasks declaration */
-static struct k_work update_dimmer_work;
+static struct k_work update_illuminance_work;
+static struct k_work update_dimmer_regulation_work;
 static struct k_work toggle_MTD_SED_work;
 static struct k_work decrease_current_illuminance_work;
 static struct k_work increase_current_illuminance_work;
@@ -65,7 +63,8 @@ int client_init()
     int err;
     uint8_t ipv6_address[INET6_ADDRSTRLEN + 1] = {0};
 
-    k_work_init(&update_dimmer_work, update_dimmer_work_cb);
+    k_work_init(&update_illuminance_work, update_illuminance_work_cb);
+    k_work_init(&update_dimmer_regulation_work, update_dimmer_regulation_work_cb);
     k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
     k_work_init(&decrease_current_illuminance_work, decrease_current_illuminance_work_cb);
     k_work_init(&increase_current_illuminance_work, increase_current_illuminance_work_cb);
@@ -88,9 +87,14 @@ int client_init()
 
 /* UI functions */
 
-void updateDimmer(void)
+void update_illuminance(void)
 {
-    submit_work_if_connected(&update_dimmer_work);
+    submit_work_if_connected(&update_illuminance_work);
+}
+
+void update_dimmer_regulation(void)
+{
+    submit_work_if_connected(&update_dimmer_regulation_work);
 }
 
 void toggle_minimal_sleepy_end_device(void)

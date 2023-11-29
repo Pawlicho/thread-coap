@@ -125,7 +125,7 @@ int heater_regulation_reply(const struct coap_packet *response,
     heater.output_power = atof(payload);
     LOG_INF("Received new power: %.1f", heater.output_power);
 
-    LOG_INF("Received data payload from temperature.GET.Rsp. DATA: %s, SRC: %s:%u, CODE: (%d.%02d)",
+    LOG_INF("Received data payload from heater_regulation.GET.Rsp. DATA: %s, SRC: %s:%u, CODE: (%d.%02d)",
             payload,
             addr_str,
             (unsigned int)port,
@@ -143,7 +143,6 @@ void update_heater_regulation_work_cb(struct k_work *item)
     uint32_t payload_size = sizeof(payload);
 
     snprintk(payload, payload_size, HEATER_REGULATION_FORMAT, heater.output_power);
-    LOG_INF("Sending payload: %s", payload);
 
     char addr_str[NET_IPV6_ADDR_LEN];
     uint16_t port = ntohs(server_addr.sin6_port);
