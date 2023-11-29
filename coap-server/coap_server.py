@@ -74,10 +74,6 @@ class HeaterRegulationResource(resource.Resource):
         # Calculate regulation parameter
         regulation_parameter = calc_heater_reg_param(server_set_params.GetTemperature(), server_cur_params.GetTemperature(), self.current_power)
 
-        print("\nCurrent temperature: " + str(server_cur_params.GetTemperature()))
-        print("\nSet temperature: " + str(server_set_params.GetTemperature()))
-        print("\nCurrent power: " + str(self.current_power))
-
         # Encode regulation parameter
         self.encode_content(regulation_parameter)
 
@@ -129,7 +125,7 @@ class DimmerRegulationResource(resource.Resource):
         self.current_power = 20
 
     def encode_content(self, value):
-        ret_val = "{:d}".format(value)
+        ret_val = "{:.1f}".format(value)
         self.encoded = ret_val.encode('ascii')
 
     def decode_content(self, payload):
@@ -144,7 +140,7 @@ class DimmerRegulationResource(resource.Resource):
         self.decode_content(request.payload)
 
         # Calculate regulation parameter
-        regulation_parameter = calc_dimmer_reg_param(server_set_params.GetIlluminance, server_cur_params.GetIlluminanc, self.current_power)
+        regulation_parameter = calc_dimmer_reg_param(server_set_params.GetIlluminance(), server_cur_params.GetIlluminance(), self.current_power)
 
         # Encode regulation parameter
         self.encode_content(regulation_parameter)

@@ -68,13 +68,28 @@ def calc_heater_reg_param(set_val, curr_val, curr_power):
     else:
         reg_param = 0.0
 
-    print("Returning: " + str(reg_param))
-    # return round(reg_param, 2)
     return reg_param
 
 def calc_dimmer_reg_param(set_val, curr_val, curr_power):
-    reg_param = 10
-    return reg_param
+    delta_i = set_val - curr_val
+    tolerance = 10
+
+    if abs(delta_i) < tolerance:
+        return curr_power
+
+    new_power = curr_power
+
+    if delta_i < 0.0:
+        new_power -= 10.0
+    else:
+        new_power += 10.0
+
+    if new_power < 0:
+        new_power = 0.0
+    if new_power > 100.0:
+        new_power = 100.0
+
+    return new_power
 
 async def pull_data(state):
     async with aiosqlite.connect(db_path) as db:
