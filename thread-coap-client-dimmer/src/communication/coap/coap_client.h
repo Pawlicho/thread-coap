@@ -18,8 +18,8 @@ int illuminance_reply(const struct coap_packet *response,
 void update_illuminance_work_cb(struct k_work *item);
 
 int dimmer_regulation_reply(const struct coap_packet *response,
-				      struct coap_reply *reply,
-				      const struct sockaddr *from);
+				            struct coap_reply *reply,
+				            const struct sockaddr *from);
 
 void update_dimmer_regulation_work_cb(struct k_work *item);
 

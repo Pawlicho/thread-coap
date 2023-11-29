@@ -63,7 +63,7 @@ void update_illuminance_work_cb(struct k_work *item)
 
     if (inet_ntop(AF_INET6, &server_addr.sin6_addr, addr_str, sizeof(addr_str)) != NULL) 
     {
-        LOG_INF("Sending ILLUMINANCE.PUT.Req. DST: %s:%u",
+        LOG_INF("Sending illuminance.PUT.Req. DST: %s:%u",
                 addr_str,
                 (unsigned int)port);
     } 

@@ -84,6 +84,7 @@ int heater_regulation_reply(const struct coap_packet *response,
 				            struct coap_reply *reply,
 				            const struct sockaddr *from)
 {
+    LOG_ERR("DEBUG!");
     const uint8_t* payload;
     uint16_t payload_size = RESPONSE_PAYLOAD_SIZE_HEATER_REGULATION;
 

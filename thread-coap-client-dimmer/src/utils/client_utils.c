@@ -16,7 +16,7 @@ LOG_MODULE_DECLARE(COAP_CLIENT);
 /* Global var indicating Thread state */
 bool is_connected;
 
-volatile DIMMER_CONTEXT_T dimmer = {.current_illuminance = 300, .output_power = 10};
+volatile DIMMER_CONTEXT_T dimmer = {.current_illuminance = 300, .output_power = 10, .max_illuminance = 1000};
 
 static struct openthread_state_changed_cb ot_state_chaged_cb = 
 {

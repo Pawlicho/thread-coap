@@ -20,5 +20,5 @@ void regulator_init()
     k_timer_init(&regulate_timer, regulate_timer_cb, NULL);
 
     /* Start regulator timer */
-    k_timer_start(&regulate_timer, K_MSEC(3000), K_MSEC(3000));
+    k_timer_start(&regulate_timer, K_MSEC(3500), K_MSEC(3500));
 }
