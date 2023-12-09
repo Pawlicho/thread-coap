@@ -6,7 +6,7 @@ import aiocoap.resource as resource
 
 from coordinator import periodic_task, ServerSetParameters, ServerCurrentParameters, calc_heater_reg_param, calc_dimmer_reg_param
 from logs_manager import LogsManager
-from database.create_db import CreateTables
+from database.create_db import CreateTables, DropAllTables
 
 db_path = '/home/tymoczko/src/thread-coap/coap-server/database/thread_coap_database.db'
 server_set_params = ServerSetParameters()
@@ -28,27 +28,29 @@ class TemperatureResource(resource.Resource):
         self.temperature = float(decoded)
 
     async def render_get(self, request):
-        # print("\nReceived temperature.GET.Req\n")
+        print("\nReceived temperature.GET.Req\n")
         self.encode_content(self.temperature)
-        # print("\nResponding with temperature.GET.Rsp\n")
+        print("\nResponding with temperature.GET.Rsp\n")
         return aiocoap.Message(payload=self.encoded)
     
     async def render_put(self, request):
-        # print("\nReceived temperature.PUT.Req")
+        print("\nReceived temperature.PUT.Req")
 
         # Decode received request's payload from ascii, convert to temp format
         self.decode_content(request.payload)
-        # print("\nNew current_temp value on the server side: " + str(self.temperature))
+        print("\nNew current_temp value on the server side: " + str(self.temperature))
 
         # Update current temperature value from client req
         server_cur_params.UpdateHeater(self.temperature)
 
-        # Log request TODO
-        # logs_manager.AddHeaterLog(self.temperature, correction, request.remote.hostinfo)
+        # Log request
+        logs_manager.AddHeaterLog(msg_type="current_temperature",
+                                  value=self.temperature,
+                                  source_ip=request.remote.hostinfo)
 
         # Send the response to client
         # Echo received payload
-        # print("\nResponding with temperature.PUT.Rsp\n")
+        print("\nResponding with temperature.PUT.Rsp\n")
         return aiocoap.Message(code=aiocoap.CHANGED, payload=request.payload)
     
 class HeaterRegulationResource(resource.Resource):
@@ -77,8 +79,12 @@ class HeaterRegulationResource(resource.Resource):
         # Encode regulation parameter
         self.encode_content(regulation_parameter)
 
-        print("\nResponding with heater_regulation.GET.Rsp\n")
+        # Log request
+        logs_manager.AddHeaterLog(msg_type="heater_regulation",
+                                  value=regulation_parameter,
+                                  source_ip=request.remote.hostinfo)
 
+        print("\nResponding with heater_regulation.GET.Rsp\n")
         return aiocoap.Message(payload=self.encoded)
     
 class IlluminanceResource(resource.Resource):
@@ -111,8 +117,10 @@ class IlluminanceResource(resource.Resource):
         # Update current illuminance value from client req
         server_cur_params.UpdateDimmer(self.illuminance)
 
-        # Log request TODO: MODIFY
-        # logs_manager.AddDimmerLog(self.illuminance, correction, request.remote.hostinfo)
+        # Log request
+        logs_manager.AddDimmerLog(msg_type="current_illuminance",
+                                  value=self.illuminance,
+                                  source_ip=request.remote.hostinfo)
         
         # Send the response to client
         # Echo request payload
@@ -145,8 +153,12 @@ class DimmerRegulationResource(resource.Resource):
         # Encode regulation parameter
         self.encode_content(regulation_parameter)
 
-        print("\nResponding with dimmer_regulation.GET.Rsp\n")
+        # Log request
+        logs_manager.AddDimmerLog(msg_type="heater_regulation",
+                                  value=regulation_parameter,
+                                  source_ip=request.remote.hostinfo)
 
+        print("\nResponding with dimmer_regulation.GET.Rsp\n")
         return aiocoap.Message(payload=self.encoded)
 
 async def main():
