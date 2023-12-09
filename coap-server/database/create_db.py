@@ -39,8 +39,8 @@ def CreateHeaterTable(conn):
     cursor.execute('''CREATE TABLE IF NOT EXISTS HEATER (
                    id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
                    time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                   measured_temperature REAL NOT NULL,
-                   sent_temperature_correction REAL,
+                   msg_type TEXT NOT NULL,
+                   value REAL NOT NULL,
                    src_IP TEXT DEFAULT 'Unknown'
                    )''')
     conn.commit()
@@ -50,8 +50,8 @@ def CreateDimmerTable(conn):
     cursor.execute('''CREATE TABLE IF NOT EXISTS DIMMER (
                    id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
                    time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                   measured_illuminance REAL NOT NULL,
-                   sent_illuminance_correction REAL,
+                   msg_type TEXT NOT NULL,
+                   value REAL,
                    src_IP TEXT DEFAULT 'Unknown'
                    )''')
     conn.commit()

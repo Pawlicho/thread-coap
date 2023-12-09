@@ -18,26 +18,24 @@ class LogsManager:
         async with aiosqlite.connect(self.db_path) as conn: 
             cursor = await conn.cursor()
             for log in self.buff_heater:
-                await cursor.execute('''INSERT INTO HEATER (time, measured_temperature, sent_temperature_correction, src_IP)
-                                     VALUES(:time, :measured_temperature, :sent_temperature_correction, :src_IP)''',
-                                     {'time': log['time'], 'measured_temperature': log['measured_temperature'], 'sent_temperature_correction': log['sent_temperature_correction'], 'src_IP': log['src_IP']})
+                await cursor.execute('''INSERT INTO HEATER (time, msg_type, value, src_IP)
+                                     VALUES(:time, :msg_type, :value, :src_IP)''',
+                                     {'time': log['time'], 'msg_type': log['msg_type'], 'value': log['value'], 'src_IP': log['src_IP']})
             for log in self.buff_dimmer:
-                await cursor.execute('''INSERT INTO DIMMER (time, measured_illuminance, sent_illuminance_correction, src_IP)
-                                     VALUES(:time, :measured_illuminance, :sent_illuminance_correction, :src_IP)''',
-                                     {'time': log['time'], 'measured_illuminance': log['measured_illuminance'], 'sent_illuminance_correction': log['sent_illuminance_correction'], 'src_IP': log['src_IP']})
+                await cursor.execute('''INSERT INTO DIMMER (time, msg_type, value, src_IP)
+                                     VALUES(:time, :msg_type, :value, :src_IP)''',
+                                     {'time': log['time'], 'msg_type': log['msg_type'], 'value': log['value'], 'src_IP': log['src_IP']})
             await conn.commit()
         self.Clear()
     
-    def AddHeaterLog(self, measured_temp, correction_temp, source_ip):
+    def AddHeaterLog(self, msg_type, value, source_ip):
         poland_timezone = pytz.timezone('Europe/Warsaw')
         timestamp = datetime.now(poland_timezone).strftime("%Y-%m-%d %H:%M:%S")
-        print(timestamp)
-        log = {'time': timestamp, 'measured_temperature': measured_temp, 'sent_temperature_correction': correction_temp, 'src_IP': source_ip}
+        log = {'time': timestamp, 'msg_type': msg_type, 'value': value, 'src_IP': source_ip}
         self.buff_heater.append(log)
 
-    def AddDimmerLog(self, measured_illuminance, correction_illuminance, source_ip):
+    def AddDimmerLog(self, msg_type, value, source_ip):
         poland_timezone = pytz.timezone('Europe/Warsaw')
         timestamp = datetime.now(poland_timezone).strftime("%Y-%m-%d %H:%M:%S")
-        print(timestamp)
-        log = {'time': timestamp, 'measured_illuminance': measured_illuminance, 'sent_illuminance_correction': correction_illuminance, 'src_IP': source_ip}
+        log = {'time': timestamp, 'msg_type': msg_type, 'value': value, 'src_IP': source_ip}
         self.buff_dimmer.append(log)
