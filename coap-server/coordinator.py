@@ -43,27 +43,27 @@ def calc_heater_reg_param(set_val, curr_val, curr_power):
     
     delta_t = set_val - curr_val
 
-    if delta_t < 0:
+    if delta_t < 0.0:
         reg_param = 0.0
-    elif delta_t >= 10:
+    elif delta_t >= 10.0:
         reg_param = 100.0
-    elif delta_t < 10 and delta_t >= 9:
+    elif delta_t < 10.0 and delta_t >= 9.0:
         reg_param = 90.0
-    elif delta_t < 9 and delta_t >= 8:
+    elif delta_t < 9.0 and delta_t >= 8.0:
         reg_param = 80.0
-    elif delta_t < 7 and delta_t >= 6:
+    elif delta_t < 8.0 and delta_t >= 7.0:
         reg_param = 70.0
-    elif delta_t < 6 and delta_t >= 5:
+    elif delta_t < 7.0 and delta_t >= 6.0:
         reg_param = 60.0
-    elif delta_t < 5 and delta_t >= 5:
+    elif delta_t < 6.0 and delta_t >= 5.0:
         reg_param = 50.0
-    elif delta_t < 4 and delta_t >= 4:
+    elif delta_t < 5.0 and delta_t >= 4.0:
         reg_param = 40.0
-    elif delta_t < 3 and delta_t >= 2:
+    elif delta_t < 4.0 and delta_t >= 3.0:
         reg_param = 30.0
-    elif delta_t < 2 and delta_t >= 1:
+    elif delta_t < 3.0 and delta_t >= 1.0:
         reg_param = 20.0
-    elif delta_t < 1 and delta_t >= 0.5:
+    elif delta_t < 1.0 and delta_t >= 0.1:
         reg_param = 10.0
     else:
         reg_param = 0.0
@@ -80,9 +80,9 @@ def calc_dimmer_reg_param(set_val, curr_val, curr_power):
     new_power = curr_power
 
     if delta_i < 0.0:
-        new_power -= 10.0
+        new_power -= 5.0
     else:
-        new_power += 10.0
+        new_power += 5.0
 
     if new_power < 0:
         new_power = 0.0

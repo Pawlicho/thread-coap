@@ -154,7 +154,7 @@ class DimmerRegulationResource(resource.Resource):
         self.encode_content(regulation_parameter)
 
         # Log request
-        logs_manager.AddDimmerLog(msg_type="heater_regulation",
+        logs_manager.AddDimmerLog(msg_type="dimmer_regulation",
                                   value=regulation_parameter,
                                   source_ip=request.remote.hostinfo)
 
@@ -164,6 +164,7 @@ class DimmerRegulationResource(resource.Resource):
 async def main():
 
     # Create Database if does not exist
+    # DropAllTables(db_path=db_path)
     CreateTables(db_path=db_path)
 
     # Server address and port number
