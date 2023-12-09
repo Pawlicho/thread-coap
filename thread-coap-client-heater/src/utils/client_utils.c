@@ -16,7 +16,7 @@ LOG_MODULE_DECLARE(COAP_CLIENT);
 /* Global var indicating Thread state */
 bool is_connected;
 
-volatile HEATER_CONTEXT_T heater = {.current_temp = 19.5f, .output_power = 10};
+volatile HEATER_CONTEXT_T heater = {.current_temp = 15.3f, .output_power = 0};
 
 static struct openthread_state_changed_cb ot_state_chaged_cb = 
 {

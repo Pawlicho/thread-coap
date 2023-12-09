@@ -29,7 +29,9 @@ static void environment_timer_cb(struct k_timer *timer)
       - quadratic equation: external_illuminance(tick mod 1200) = f(x) = ( (-5/3600)*x^2 + (5/3)*x ) mod 600*x
    */
     
-    float external_illuminance = (-5.0f / 3600.0f) * tick_n * tick_n + (5.0f / 3.0f) * tick_n;
+    /* Let's modify it so the maximum value of ext illuminance would be 100 lux*/
+    // float external_illuminance = ((-5.0f / 3600.0f) * tick_n * tick_n + (5.0f / 3.0f) * tick_n) / 5.0f;
+    float external_illuminance = 0.0f;
     dimmer.current_illuminance = dimmer.output_power / 100.f * dimmer.max_illuminance + external_illuminance;
 }
 
@@ -37,5 +39,5 @@ void environment_init()
 {
     k_timer_init(&environment_timer, environment_timer_cb, NULL);
 
-    k_timer_start(&environment_timer, K_MSEC(100), K_MSEC(100));
+    k_timer_start(&environment_timer, K_MSEC(200), K_MSEC(200));
 }

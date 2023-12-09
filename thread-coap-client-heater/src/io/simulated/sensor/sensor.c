@@ -18,5 +18,5 @@ void sensor_init()
     /* Start timers */
 
     /* Every one second send measurement to the Server */
-    k_timer_start(&measure_timer, K_MSEC(600), K_MSEC(600));
+    k_timer_start(&measure_timer, K_MSEC(1000), K_MSEC(1000));
 }
