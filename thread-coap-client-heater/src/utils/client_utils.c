@@ -18,11 +18,6 @@ bool is_connected;
 
 volatile HEATER_CONTEXT_T heater = {.current_temp = 15.3f, .output_power = 0};
 
-static struct openthread_state_changed_cb ot_state_chaged_cb = 
-{
-    .state_changed_cb = on_thread_state_changed
-};
-
 static void decrease_current_temp_work_cb(struct k_work *item)
 {
     heater.current_temp -= BUTTON_TEMPERATURE_UPDATE_STEP;
@@ -69,12 +64,6 @@ int client_init()
     k_work_init(&toggle_MTD_SED_work, toggle_minimal_sleepy_end_device_work_cb);
     k_work_init(&decrease_current_temp_work, decrease_current_temp_work_cb);
     k_work_init(&increase_current_temp_work, increase_current_temp_work_cb);
-
-	if ( (err = openthread_state_changed_cb_register(openthread_get_default_context(), &ot_state_chaged_cb)) != 0)
-    {
-        LOG_ERR("Unable to set openthread_state_changed_cb_register: %d", err);
-        return err;
-    }
 
     /* Waiting for NAT64 Prefix acquiring */
     /* This while is kind of "blocking", but without the prefix, nothing runs correctly */
